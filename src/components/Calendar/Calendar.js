@@ -1,13 +1,30 @@
 import { useEffect, useState } from "react";
+import Modal from "../CalendarEvent/Modal";
+import EventForm from "../CalendarEvent/EventForm";
 
-const Day = ({ day }) => {
+const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
   const style = {
+    display: "flex",
     backgroundColor: "white",
-    height: "90px",
+    height: "110px",
     padding: "10px",
+    border: "none",
+    cursor: "pointer",
   };
 
-  return <div style={style}>{day}</div>;
+  return (
+    <>
+      <button
+        style={style}
+        onClick={() => {
+          setOpenModal(true);
+          setEventDate(new Date(year, month, day));
+        }}
+      >
+        {day}
+      </button>
+    </>
+  );
 };
 
 const DayPlaceholder = () => {
@@ -96,6 +113,8 @@ const Calendar = () => {
   const [currYear, setCurrYear] = useState(today.getFullYear());
   const [firstDayInMonth, setFirstDayInMonth] = useState(getFirstDayInMonth(currYear, currMonthIndex));
   const [totalDaysInMonth, setTotalDaysInMonth] = useState(getTotalDaysInMonth(currYear, currMonthIndex));
+  const [openModal, setOpenModal] = useState(false);
+  const [eventDate, setEventDate] = useState(today);
 
   const handleChangeMonth = (direction) => {
     switch (direction) {
@@ -127,36 +146,63 @@ const Calendar = () => {
     setTotalDaysInMonth(getTotalDaysInMonth(currYear, currMonthIndex));
   }, [currYear, currMonthIndex]);
 
+  const onClose = () => {
+    setOpenModal(false);
+  };
+
   return (
-    <div>
-      <div style={calendarHeaderStyle}>
-        <h1 style={calendarMonthStyle}>
-          {indexToMonth.get(currMonthIndex)} {currYear}
-        </h1>
-        <button style={calendarButtonStyle} onClick={() => handleChangeMonth("left")}>{`<`}</button>
-        <button style={calendarButtonStyle} onClick={() => handleChangeMonth("right")}>{`>`}</button>
-        <button style={calendarButtonStyle} onClick={() => handleChangeMonth("reset")}>
-          reset
-        </button>
+    <>
+      <div style={{ position: "relative" }}>
+        <div style={calendarHeaderStyle}>
+          <h1 style={calendarMonthStyle}>
+            {indexToMonth.get(currMonthIndex)} {currYear}
+          </h1>
+          <button style={calendarButtonStyle} onClick={() => handleChangeMonth("left")}>{`<`}</button>
+          <button style={calendarButtonStyle} onClick={() => handleChangeMonth("right")}>{`>`}</button>
+          <button style={calendarButtonStyle} onClick={() => handleChangeMonth("reset")}>
+            reset
+          </button>
+        </div>
+        <div style={calendarGridStyle}>
+          {weekdayNames.map((_weekday, index) => {
+            return <Weekday key={index} weekday={indexToWeekday.get(index)} />;
+          })}
+          {initialWeek.map((_day, index) => {
+            switch (true) {
+              case index === firstDayInMonth.getDay():
+                return (
+                  <Day
+                    key={index}
+                    day={index + 1 - firstDayInMonth.getDay()}
+                    month={currMonthIndex}
+                    year={currYear}
+                    setOpenModal={setOpenModal}
+                    setEventDate={setEventDate}
+                  />
+                );
+              case index < firstDayInMonth.getDay():
+                return <DayPlaceholder key={index} />;
+              case index - firstDayInMonth.getDay() + 1 <= totalDaysInMonth:
+                return (
+                  <Day
+                    key={index}
+                    day={index - firstDayInMonth.getDay() + 1}
+                    month={currMonthIndex}
+                    year={currYear}
+                    setOpenModal={setOpenModal}
+                    setEventDate={setEventDate}
+                  />
+                );
+              default:
+                return <DayPlaceholder key={index} />;
+            }
+          })}
+        </div>
+        <Modal openModal={openModal} onClose={onClose}>
+          <EventForm eventDate={eventDate} indexToMonth={indexToMonth} onClose={onClose} />
+        </Modal>
       </div>
-      <div style={calendarGridStyle}>
-        {weekdayNames.map((_weekday, index) => {
-          return <Weekday key={index} weekday={indexToWeekday.get(index)} />;
-        })}
-        {initialWeek.map((_day, index) => {
-          switch (true) {
-            case index === firstDayInMonth.getDay():
-              return <Day key={index} day={index + 1 - firstDayInMonth.getDay()} />;
-            case index < firstDayInMonth.getDay():
-              return <DayPlaceholder key={index} />;
-            case index - firstDayInMonth.getDay() + 1 <= totalDaysInMonth:
-              return <Day key={index} day={index - firstDayInMonth.getDay() + 1} />;
-            default:
-              return <DayPlaceholder key={index} />;
-          }
-        })}
-      </div>
-    </div>
+    </>
   );
 };
 
