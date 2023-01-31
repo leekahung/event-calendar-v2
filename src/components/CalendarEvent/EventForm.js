@@ -42,11 +42,11 @@ const EventForm = ({ indexToMonth, eventDate, onClose }) => {
 
   return (
     <>
-      <h2>Add Event</h2>
+      <p>Add Event?</p>
       <form style={style} onSubmit={handleFormSubmit}>
         <div>Date:</div>
         <div>
-          {indexToMonth.get(eventDate.getMonth())} {eventDate.getDate()} {eventDate.getFullYear()}
+          {indexToMonth.get(eventDate.getMonth())} {eventDate.getDate()}, {eventDate.getFullYear()}
         </div>
         <label>Event: </label>
         <input style={inputStyle} {...eventName} />
