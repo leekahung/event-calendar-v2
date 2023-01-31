@@ -2,7 +2,7 @@ import { useField } from "../../hooks";
 
 const EventForm = ({ indexToMonth, eventDate, onClose }) => {
   const { clearValue: clearEventName, ...eventName } = useField("text");
-  const { clearValue: clearEventDescription, ...eventDescription } = useField("textarea");
+  const { clearValue: clearEventDescription, type, ...eventDescription } = useField("textarea");
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -13,21 +13,48 @@ const EventForm = ({ indexToMonth, eventDate, onClose }) => {
     onClose();
   };
 
+  const style = {
+    display: "grid",
+    gridTemplateColumns: "40px 1fr",
+    alignItems: "center",
+    gap: "10px",
+  };
+
+  const inputStyle = {
+    padding: "5px",
+  };
+
+  const textAreaStyle = {
+    fontFamily: "Arial",
+    padding: "5px",
+  };
+
+  const fullWidthStyle = {
+    gridColumn: "1 / 3",
+  };
+
+  const buttonStyle = {
+    padding: "5px 10px",
+    borderRadius: "15px",
+    borderStyle: "none",
+    cursor: "pointer",
+  };
+
   return (
-    <form onSubmit={handleFormSubmit}>
-      <div>
-        Date: {indexToMonth.get(eventDate.getMonth())} {eventDate.getDate()} {eventDate.getFullYear()}
-      </div>
-      <div>
+    <>
+      <h2>Add Event</h2>
+      <form style={style} onSubmit={handleFormSubmit}>
+        <div>Date:</div>
+        <div>
+          {indexToMonth.get(eventDate.getMonth())} {eventDate.getDate()} {eventDate.getFullYear()}
+        </div>
         <label>Event: </label>
-        <input {...eventName} />
-      </div>
-      <div>
-        <label>Event Description: </label>
-        <input {...eventDescription} />
-      </div>
-      <button>submit</button>
-    </form>
+        <input style={inputStyle} {...eventName} />
+        <label style={fullWidthStyle}>Event Description: </label>
+        <textarea style={{ ...fullWidthStyle, ...textAreaStyle }} {...eventDescription} />
+        <button style={{ ...buttonStyle, gridColumn: "1 / 3", width: "70px" }}>submit</button>
+      </form>
+    </>
   );
 };
 

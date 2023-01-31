@@ -16,10 +16,21 @@ export default function Modal({ openModal, onClose, children }) {
     width: "250px",
   };
 
+  const buttonStyle = {
+    width: "70px",
+    padding: "5px 10px",
+    margin: "10px 0 0",
+    borderRadius: "15px",
+    borderStyle: "none",
+    cursor: "pointer",
+  };
+
   return (
     <div style={modalStyle}>
       {children}
-      <button onClick={onClose}>close</button>
+      <button style={buttonStyle} onClick={onClose}>
+        close
+      </button>
     </div>
   );
 }

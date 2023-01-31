@@ -5,9 +5,10 @@ import EventForm from "../CalendarEvent/EventForm";
 const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
   const style = {
     display: "flex",
+    fontSize: "16px",
     backgroundColor: "white",
-    height: "110px",
-    padding: "10px",
+    height: "130px",
+    padding: "15px 20px",
     border: "none",
     cursor: "pointer",
   };
@@ -30,7 +31,7 @@ const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
 const DayPlaceholder = () => {
   const style = {
     backgroundColor: "white",
-    height: "90px",
+    height: "110px",
     padding: "10px",
   };
 
@@ -77,6 +78,15 @@ const Calendar = () => {
     [11, "December"],
   ]);
 
+  const calendarStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    position: "relative",
+    width: "1200px",
+    height: "100%",
+  };
+
   const calendarGridStyle = {
     display: "grid",
     backgroundColor: "black",
@@ -97,7 +107,9 @@ const Calendar = () => {
   };
 
   const calendarButtonStyle = {
-    height: "20px",
+    height: "40px",
+    width: "60px",
+    fontSize: "16px",
     cursor: "pointer",
   };
 
@@ -152,7 +164,7 @@ const Calendar = () => {
 
   return (
     <>
-      <div style={{ position: "relative" }}>
+      <div style={calendarStyle}>
         <div style={calendarHeaderStyle}>
           <h1 style={calendarMonthStyle}>
             {indexToMonth.get(currMonthIndex)} {currYear}
