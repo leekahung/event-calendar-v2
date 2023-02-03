@@ -1,13 +1,26 @@
+import { useContext } from "react";
+import { EventListContext } from "../../App";
 import { useField } from "../../hooks";
 
 const EventForm = ({ indexToMonth, eventDate, onClose }) => {
   const { clearValue: clearEventName, ...eventName } = useField("text");
   const { clearValue: clearEventDescription, type, ...eventDescription } = useField("textarea");
+  const { eventList, setEventList } = useContext(EventListContext);
+
+  const generateId = () => {
+    return Number((Math.random() * 10000000).toFixed(0));
+  };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log(eventName.value);
-    console.log(eventDescription.value);
+    const newEvent = {
+      date: eventDate,
+      name: eventName.value,
+      description: eventDescription.value,
+      id: generateId(),
+    };
+    setEventList(eventList.concat([newEvent]));
+    window.localStorage.setItem("eventList", JSON.stringify([eventList]));
     clearEventName();
     clearEventDescription();
     onClose();

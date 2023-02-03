@@ -1,13 +1,27 @@
-import { createContext } from "react";
+import { createContext, useEffect, useState } from "react";
 import Calendar from "./components/Calendar/Calendar";
 import EventList from "./components/EventList/EventList";
 import { useSelectDate } from "./hooks";
 
 export const EventDateContext = createContext(null);
+export const EventListContext = createContext(null);
+export const EventModalContext = createContext(null);
 
 function App() {
   const today = new Date();
   const { selectedDate, setSelectedDate } = useSelectDate(today.getFullYear(), today.getMonth(), today.getDate());
+  let [eventList, setEventList] = useState([]);
+  let [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    if (eventList.length !== 0) {
+      window.localStorage.setItem("eventList", JSON.stringify(eventList));
+    } else {
+      if (window.localStorage.getItem("eventList")) {
+        setEventList(JSON.parse(window.localStorage.getItem("eventList")));
+      }
+    }
+  }, [eventList]);
 
   const style = {
     display: "grid",
@@ -21,8 +35,12 @@ function App() {
   return (
     <div style={style}>
       <EventDateContext.Provider value={{ selectedDate, setSelectedDate }}>
-        <Calendar />
-        <EventList />
+        <EventListContext.Provider value={{ eventList, setEventList }}>
+          <EventModalContext.Provider value={{ openModal, setOpenModal }}>
+            <Calendar />
+            <EventList />
+          </EventModalContext.Provider>
+        </EventListContext.Provider>
       </EventDateContext.Provider>
     </div>
   );

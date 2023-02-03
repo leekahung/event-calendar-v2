@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import Modal from "../CalendarEvent/Modal";
 import EventForm from "../CalendarEvent/EventForm";
-import { EventDateContext } from "../../App";
+import { EventDateContext, EventListContext, EventModalContext } from "../../App";
 import { indexToMonth, indexToWeekday } from "../../utils/calendar-helper";
 
-const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
+const Day = ({ day, month, year, setEventDate }) => {
   const { selectedDate } = useContext(EventDateContext);
+  const { eventList } = useContext(EventListContext);
   const [isHover, setIsHover] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -26,6 +27,7 @@ const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
   };
 
   const style = {
+    position: "relative",
     display: "flex",
     fontSize: "16px",
     backgroundColor: isHover ? (isClicked ? "rgb(250, 200, 200)" : "rgb(250, 230, 230)") : "white",
@@ -45,6 +47,21 @@ const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
     borderRadius: "20px",
   };
 
+  const eventStyle = {
+    position: "absolute",
+    bottom: "10%",
+    right: "15%",
+  };
+
+  const numEvents = eventList.filter((e) => {
+    const eventDay = new Date(e.date);
+    if (eventDay.getDate() === day && eventDay.getMonth() === month && eventDay.getFullYear() === year) {
+      return e;
+    } else {
+      return null;
+    }
+  }).length;
+
   return (
     <>
       <EventDateContext.Consumer>
@@ -52,7 +69,6 @@ const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
           <button
             style={style}
             onClick={() => {
-              setOpenModal(true);
               setEventDate(new Date(year, month, day));
               setSelectedDate(year, month, day);
             }}
@@ -61,9 +77,10 @@ const Day = ({ day, month, year, setOpenModal, setEventDate }) => {
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
           >
-            <div style={dateStyle}>
-              <span>{day}</span>
+            <div style={{ position: "relative" }}>
+              <span style={dateStyle}>{day}</span>
             </div>
+            <span style={eventStyle}>{numEvents ? numEvents : null}</span>
           </button>
         )}
       </EventDateContext.Consumer>
@@ -131,7 +148,7 @@ const Calendar = () => {
   const calendarButtonStyle = {
     height: "40px",
     width: "60px",
-    fontSize: "16px",
+    fontSize: "13px",
     cursor: "pointer",
   };
 
@@ -147,8 +164,9 @@ const Calendar = () => {
   const [currYear, setCurrYear] = useState(today.getFullYear());
   const [firstDayInMonth, setFirstDayInMonth] = useState(getFirstDayInMonth(currYear, currMonthIndex));
   const [totalDaysInMonth, setTotalDaysInMonth] = useState(getTotalDaysInMonth(currYear, currMonthIndex));
-  const [openModal, setOpenModal] = useState(false);
   const [eventDate, setEventDate] = useState(today);
+  const { openModal, setOpenModal } = useContext(EventModalContext);
+  const { setSelectedDate } = useContext(EventDateContext);
 
   const handleChangeMonth = (direction) => {
     switch (direction) {
@@ -193,20 +211,24 @@ const Calendar = () => {
           </h1>
           <button style={calendarButtonStyle} onClick={() => handleChangeMonth("left")}>{`<`}</button>
           <button style={calendarButtonStyle} onClick={() => handleChangeMonth("right")}>{`>`}</button>
-          <EventDateContext.Consumer>
-            {({ setSelectedDate }) => (
-              <button
-                style={calendarButtonStyle}
-                onClick={() => {
-                  handleChangeMonth("reset");
-                  setSelectedDate(today.getFullYear(), today.getMonth(), today.getDate());
-                  onClose();
-                }}
-              >
-                reset
-              </button>
-            )}
-          </EventDateContext.Consumer>
+          <button
+            style={calendarButtonStyle}
+            onClick={() => {
+              handleChangeMonth("reset");
+              setSelectedDate(today.getFullYear(), today.getMonth(), today.getDate());
+              onClose();
+            }}
+          >
+            reset date
+          </button>
+          <button
+            style={calendarButtonStyle}
+            onClick={() => {
+              setOpenModal(true);
+            }}
+          >
+            Add Event
+          </button>
         </div>
         <div style={calendarGridStyle}>
           {weekdayNames.map((_weekday, index) => {
