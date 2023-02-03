@@ -3,6 +3,8 @@ import Modal from "../CalendarEvent/Modal";
 import EventForm from "../CalendarEvent/EventForm";
 import { EventDateContext, EventListContext, EventModalContext } from "../../App";
 import { indexToMonth, indexToWeekday } from "../../utils/calendar-helper";
+import leftChevron from "../../assets/img/left-chevron.png";
+import rightChevron from "../../assets/img/right-chevron.png";
 
 const Day = ({ day, month, year, setEventDate }) => {
   const { selectedDate } = useContext(EventDateContext);
@@ -111,6 +113,55 @@ const Weekday = ({ weekday }) => {
   return <div style={style}>{weekday}</div>;
 };
 
+const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
+  const [isHover, setIsHover] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHover(false);
+  };
+
+  const handleMouseDown = () => {
+    setIsClicked(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsClicked(false);
+  };
+
+  const calendarButtonMonthStyle = {
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: isHover ? (isClicked ? "rgb(230, 230, 230)" : "grey") : "white",
+    height: "40px",
+    width: "40px",
+    borderRadius: "20px",
+    border: "none",
+    cursor: "pointer",
+  };
+
+  return (
+    <button
+      style={calendarButtonMonthStyle}
+      onClick={() => handleChangeMonth(direction)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+    >
+      {direction === "left" ? (
+        <img style={{ height: "70%", width: "100%", marginRight: "10px" }} src={leftChevron} alt="left-pointing cheveron icon" />
+      ) : (
+        <img style={{ height: "70%", width: "100%", marginLeft: "3px" }} src={rightChevron} alt="right-pointing cheveron icon" />
+      )}
+    </button>
+  );
+};
+
 const Calendar = () => {
   const weekdayNames = Array(7).fill(0);
   const initialWeek = Array(42).fill(0);
@@ -120,7 +171,6 @@ const Calendar = () => {
     flexDirection: "column",
     alignItems: "center",
     position: "relative",
-    height: "95vh",
   };
 
   const calendarGridStyle = {
@@ -209,8 +259,9 @@ const Calendar = () => {
           <h1 style={calendarMonthStyle}>
             {indexToMonth.get(currMonthIndex)} {currYear}
           </h1>
-          <button style={calendarButtonStyle} onClick={() => handleChangeMonth("left")}>{`<`}</button>
-          <button style={calendarButtonStyle} onClick={() => handleChangeMonth("right")}>{`>`}</button>
+          {["left", "right"].map((direction) => {
+            return <ChangeMonthButton key={direction} handleChangeMonth={handleChangeMonth} direction={direction} />;
+          })}
           <button
             style={calendarButtonStyle}
             onClick={() => {
@@ -219,7 +270,7 @@ const Calendar = () => {
               onClose();
             }}
           >
-            reset date
+            Reset Date
           </button>
           <button
             style={calendarButtonStyle}

@@ -11,7 +11,8 @@ function App() {
   const today = new Date();
   const { selectedDate, setSelectedDate } = useSelectDate(today.getFullYear(), today.getMonth(), today.getDate());
   let [eventList, setEventList] = useState([]);
-  let [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [matches, setMatches] = useState(false);
 
   useEffect(() => {
     if (eventList.length !== 0) {
