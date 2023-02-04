@@ -1,94 +1,13 @@
 import { useContext, useEffect, useState } from "react";
+import Day from "./Day";
+import ChangeMonthButton from "./ChangeMonthButton";
 import Modal from "../CalendarEvent/Modal";
 import EventForm from "../CalendarEvent/EventForm";
-import { EventDateContext, EventListContext, EventModalContext } from "../../App";
-import { indexToMonth, indexToWeekday } from "../../utils/calendar-helper";
-import leftChevron from "../../assets/img/left-chevron.png";
-import rightChevron from "../../assets/img/right-chevron.png";
-
-const Day = ({ day, month, year, setEventDate }) => {
-  const { selectedDate } = useContext(EventDateContext);
-  const { eventList } = useContext(EventListContext);
-  const [isHover, setIsHover] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleMouseEnter = () => {
-    setIsHover(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHover(false);
-  };
-
-  const handleMouseDown = () => {
-    setIsClicked(true);
-  };
-
-  const handleMouseUp = () => {
-    setIsClicked(false);
-  };
-
-  const style = {
-    position: "relative",
-    display: "flex",
-    fontSize: "16px",
-    backgroundColor: isHover ? (isClicked ? "rgb(250, 200, 200)" : "rgb(250, 230, 230)") : "white",
-    height: "130px",
-    padding: "15px 20px",
-    border: "none",
-    cursor: "pointer",
-  };
-
-  const dateStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: JSON.stringify(selectedDate) === JSON.stringify({ year, month, day }) ? "lightblue" : "",
-    height: "30px",
-    width: "30px",
-    borderRadius: "20px",
-  };
-
-  const eventStyle = {
-    position: "absolute",
-    bottom: "10%",
-    right: "15%",
-  };
-
-  const numEvents = eventList.filter((e) => {
-    const eventDay = new Date(e.date);
-    if (eventDay.getDate() === day && eventDay.getMonth() === month && eventDay.getFullYear() === year) {
-      return e;
-    } else {
-      return null;
-    }
-  }).length;
-
-  return (
-    <>
-      <EventDateContext.Consumer>
-        {({ setSelectedDate }) => (
-          <button
-            style={style}
-            onClick={() => {
-              setEventDate(new Date(year, month, day));
-              setSelectedDate(year, month, day);
-            }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-          >
-            <div style={{ position: "relative" }}>
-              <span style={dateStyle}>{day}</span>
-            </div>
-            <span style={eventStyle}>{numEvents ? numEvents : null}</span>
-          </button>
-        )}
-      </EventDateContext.Consumer>
-    </>
-  );
-};
+import EventEditForm from "../CalendarEvent/EventEditForm";
+import { EventDateContext, EventEditModalContext, EventModalContext } from "../../App";
+import { indexToMonth, indexToWeekday, indexToWeekdayShort } from "../../utils/calendar-helper";
+import menu from "../../assets/img/menu.png";
+import { useMediaQuery } from "../../hooks";
 
 const DayPlaceholder = () => {
   const style = {
@@ -113,56 +32,9 @@ const Weekday = ({ weekday }) => {
   return <div style={style}>{weekday}</div>;
 };
 
-const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
-  const [isHover, setIsHover] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+const Calendar = ({ query1200, handleOpenEventList }) => {
+  const query900 = useMediaQuery("(min-width: 900px)");
 
-  const handleMouseEnter = () => {
-    setIsHover(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHover(false);
-  };
-
-  const handleMouseDown = () => {
-    setIsClicked(true);
-  };
-
-  const handleMouseUp = () => {
-    setIsClicked(false);
-  };
-
-  const calendarButtonMonthStyle = {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: isHover ? (isClicked ? "rgb(230, 230, 230)" : "grey") : "white",
-    height: "40px",
-    width: "40px",
-    borderRadius: "20px",
-    border: "none",
-    cursor: "pointer",
-  };
-
-  return (
-    <button
-      style={calendarButtonMonthStyle}
-      onClick={() => handleChangeMonth(direction)}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-    >
-      {direction === "left" ? (
-        <img style={{ height: "70%", width: "100%", marginRight: "10px" }} src={leftChevron} alt="left-pointing cheveron icon" />
-      ) : (
-        <img style={{ height: "70%", width: "100%", marginLeft: "3px" }} src={rightChevron} alt="right-pointing cheveron icon" />
-      )}
-    </button>
-  );
-};
-
-const Calendar = () => {
   const weekdayNames = Array(7).fill(0);
   const initialWeek = Array(42).fill(0);
 
@@ -170,6 +42,7 @@ const Calendar = () => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
     position: "relative",
   };
 
@@ -177,17 +50,24 @@ const Calendar = () => {
     display: "grid",
     backgroundColor: "black",
     border: "1px solid black",
-    width: "100%",
+    width: "95%",
     gridTemplateColumns: "repeat(7, 1fr)",
     gridGap: "1px",
+    marginBottom: "40px",
   };
 
   const calendarHeaderStyle = {
     display: "flex",
     alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
+    padding: "20px",
+  };
+
+  const calendarHeaderMainGrpStyle = {
+    display: "flex",
+    alignItems: "center",
     gap: "20px",
-    paddingBottom: "20px",
-    height: "100%",
   };
 
   const calendarMonthStyle = {
@@ -200,6 +80,20 @@ const Calendar = () => {
     width: "60px",
     fontSize: "13px",
     cursor: "pointer",
+  };
+
+  const menuButtonStyle = {
+    backgroundColor: "lightgrey",
+    border: "none",
+    height: "50px",
+    width: "50px",
+    cursor: "pointer",
+  };
+
+  const burgerMenuStyle = {
+    backgroundColor: "none",
+    height: "40px",
+    width: "40px",
   };
 
   const today = new Date();
@@ -216,6 +110,7 @@ const Calendar = () => {
   const [totalDaysInMonth, setTotalDaysInMonth] = useState(getTotalDaysInMonth(currYear, currMonthIndex));
   const [eventDate, setEventDate] = useState(today);
   const { openModal, setOpenModal } = useContext(EventModalContext);
+  const { openModalEdit, setOpenModalEdit } = useContext(EventEditModalContext);
   const { setSelectedDate } = useContext(EventDateContext);
 
   const handleChangeMonth = (direction) => {
@@ -252,38 +147,51 @@ const Calendar = () => {
     setOpenModal(false);
   };
 
+  const onCloseEdit = () => {
+    setOpenModalEdit(false);
+  };
+
   return (
     <>
       <div style={calendarStyle}>
         <div style={calendarHeaderStyle}>
-          <h1 style={calendarMonthStyle}>
-            {indexToMonth.get(currMonthIndex)} {currYear}
-          </h1>
-          {["left", "right"].map((direction) => {
-            return <ChangeMonthButton key={direction} handleChangeMonth={handleChangeMonth} direction={direction} />;
-          })}
-          <button
-            style={calendarButtonStyle}
-            onClick={() => {
-              handleChangeMonth("reset");
-              setSelectedDate(today.getFullYear(), today.getMonth(), today.getDate());
-              onClose();
-            }}
-          >
-            Reset Date
-          </button>
-          <button
-            style={calendarButtonStyle}
-            onClick={() => {
-              setOpenModal(true);
-            }}
-          >
-            Add Event
-          </button>
+          <div style={calendarHeaderMainGrpStyle}>
+            <h1 style={calendarMonthStyle}>
+              {indexToMonth.get(currMonthIndex)} {currYear}
+            </h1>
+            {["left", "right"].map((direction) => {
+              return <ChangeMonthButton key={direction} handleChangeMonth={handleChangeMonth} direction={direction} />;
+            })}
+            <button
+              style={calendarButtonStyle}
+              onClick={() => {
+                handleChangeMonth("reset");
+                setSelectedDate(today.getFullYear(), today.getMonth(), today.getDate());
+                onClose();
+              }}
+            >
+              Reset Date
+            </button>
+            <button
+              style={calendarButtonStyle}
+              onClick={() => {
+                setOpenModal(true);
+              }}
+            >
+              Add Event
+            </button>
+          </div>
+          <div>
+            {query1200 ? null : (
+              <button style={menuButtonStyle} onClick={handleOpenEventList}>
+                <img style={burgerMenuStyle} src={menu} alt="burger menu icon" />
+              </button>
+            )}
+          </div>
         </div>
         <div style={calendarGridStyle}>
           {weekdayNames.map((_weekday, index) => {
-            return <Weekday key={index} weekday={indexToWeekday.get(index)} />;
+            return <Weekday key={index} weekday={query900 ? indexToWeekday.get(index) : indexToWeekdayShort.get(index)} />;
           })}
           {initialWeek.map((_day, index) => {
             switch (true) {
@@ -318,6 +226,9 @@ const Calendar = () => {
         </div>
         <Modal openModal={openModal} onClose={onClose}>
           <EventForm eventDate={eventDate} indexToMonth={indexToMonth} onClose={onClose} />
+        </Modal>
+        <Modal openModal={openModalEdit} onClose={onCloseEdit}>
+          <EventEditForm eventDate={eventDate} indexToMonth={indexToMonth} onClose={onCloseEdit} />
         </Modal>
       </div>
     </>

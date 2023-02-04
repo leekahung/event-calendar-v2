@@ -1,23 +1,18 @@
 import { useContext } from "react";
-import { EventDateContext, EventListContext, EventModalContext } from "../../App";
+import { EventDateContext, EventListContext, EventEditModalContext, EventIdContext } from "../../App";
 import { indexToMonth } from "../../utils/calendar-helper";
 
-const EventList = () => {
+const EventList = ({ style, handleOpenEventList }) => {
   const { eventList } = useContext(EventListContext);
   const { selectedDate } = useContext(EventDateContext);
-  const { setOpenModal } = useContext(EventModalContext);
-
-  const style = {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    backgroundColor: "white",
-  };
+  const { setOpenModalEdit } = useContext(EventEditModalContext);
+  const { setEventId } = useContext(EventIdContext);
 
   const eventBoxStyle = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: "20px",
     width: "80%",
     height: "10%",
     border: "1px solid black",
@@ -37,7 +32,9 @@ const EventList = () => {
               style={eventBoxStyle}
               key={e.id}
               onClick={() => {
-                setOpenModal(true);
+                setEventId(e.id);
+                setOpenModalEdit(true);
+                handleOpenEventList();
               }}
             >
               {e.name}
