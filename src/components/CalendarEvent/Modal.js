@@ -1,3 +1,5 @@
+import closeBtn from "../../assets/img/close.png";
+
 export default function Modal({ openModal, onClose, children }) {
   if (!openModal) {
     return null;
@@ -14,22 +16,32 @@ export default function Modal({ openModal, onClose, children }) {
     backgroundColor: "lightgrey",
     height: "300px",
     width: "250px",
+    zIndex: 3,
   };
 
   const buttonStyle = {
-    width: "70px",
-    padding: "5px 10px",
-    margin: "10px 0 0",
-    borderRadius: "15px",
-    borderStyle: "none",
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContents: "center",
+    padding: "5px",
+    backgroundColor: "lightgrey",
+    border: "none",
     cursor: "pointer",
+  };
+
+  const buttonImgStyle = {
+    width: "15px",
+    height: "15px",
   };
 
   return (
     <div style={modalStyle}>
       {children}
       <button style={buttonStyle} onClick={onClose}>
-        close
+        <img style={buttonImgStyle} src={closeBtn} alt="icon of close button" />
       </button>
     </div>
   );

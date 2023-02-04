@@ -1,6 +1,22 @@
+html,
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+body {
   background-color: lightgrey;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.event-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.event-list::-webkit-scrollbar {
+  display: none;
 }

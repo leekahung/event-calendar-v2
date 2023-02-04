@@ -1,39 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import Day from "./Day";
+import { Day, DayPlaceholder, Weekday } from "./CalendarGridComponents";
 import ChangeMonthButton from "./ChangeMonthButton";
 import Modal from "../CalendarEvent/Modal";
-import EventForm from "../CalendarEvent/EventForm";
-import EventEditForm from "../CalendarEvent/EventEditForm";
-import { EventDateContext, EventEditModalContext, EventModalContext } from "../../App";
-import { indexToMonth, indexToWeekday, indexToWeekdayShort } from "../../utils/calendar-helper";
+import { EventEditForm, EventForm } from "../CalendarEvent/EventForm/";
+import { EventDayContext, ToggleContext } from "../../App";
+import {
+  indexToMonth,
+  indexToMonthShort,
+  indexToWeekday,
+  indexToWeekdayShort,
+} from "../../utils/calendar-helper";
 import menu from "../../assets/img/menu.png";
 import { useMediaQuery } from "../../hooks";
 
-const DayPlaceholder = () => {
-  const style = {
-    backgroundColor: "white",
-    height: "110px",
-    padding: "10px",
-  };
-
-  return <div style={style} />;
-};
-
-const Weekday = ({ weekday }) => {
-  const style = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    height: "20px",
-    padding: "10px",
-  };
-
-  return <div style={style}>{weekday}</div>;
-};
-
-const Calendar = ({ query1200, handleOpenEventList }) => {
+const Calendar = ({ query1200 }) => {
   const query900 = useMediaQuery("(min-width: 900px)");
+  const query600 = useMediaQuery("(min-width: 600px)");
+  const query400 = useMediaQuery("(min-width: 400px)");
 
   const weekdayNames = Array(7).fill(0);
   const initialWeek = Array(42).fill(0);
@@ -42,18 +25,21 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: query900 ? "center" : "flex-start",
     position: "relative",
+    height: "100%",
   };
 
   const calendarGridStyle = {
     display: "grid",
     backgroundColor: "black",
     border: "1px solid black",
+    height: "100%",
     width: "95%",
     gridTemplateColumns: "repeat(7, 1fr)",
+    gridTemplateRows: "40px repeat(6, 1fr)",
     gridGap: "1px",
-    marginBottom: "40px",
+    marginBottom: "20px",
   };
 
   const calendarHeaderStyle = {
@@ -61,23 +47,24 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
     alignItems: "center",
     justifyContent: "space-around",
     width: "100%",
-    padding: "20px",
+    padding: query600 ? "20px" : "10px",
   };
 
   const calendarHeaderMainGrpStyle = {
     display: "flex",
     alignItems: "center",
-    gap: "20px",
+    gap: query600 ? "20px" : query400 ? "10px" : "3px",
   };
 
   const calendarMonthStyle = {
-    width: "250px",
+    width: query900 ? "250px" : query600 ? "180px" : query400 ? "90px" : "80px",
+    fontSize: query900 ? "" : query600 ? "26px" : query400 ? "20px" : "18px",
     margin: "0",
   };
 
   const calendarButtonStyle = {
-    height: "40px",
-    width: "60px",
+    height: query900 ? "40px" : "30px",
+    width: query900 ? "60px" : "50px",
     fontSize: "13px",
     cursor: "pointer",
   };
@@ -106,12 +93,14 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
 
   const [currMonthIndex, setCurrMonthIndex] = useState(today.getMonth());
   const [currYear, setCurrYear] = useState(today.getFullYear());
-  const [firstDayInMonth, setFirstDayInMonth] = useState(getFirstDayInMonth(currYear, currMonthIndex));
-  const [totalDaysInMonth, setTotalDaysInMonth] = useState(getTotalDaysInMonth(currYear, currMonthIndex));
-  const [eventDate, setEventDate] = useState(today);
-  const { openModal, setOpenModal } = useContext(EventModalContext);
-  const { openModalEdit, setOpenModalEdit } = useContext(EventEditModalContext);
-  const { setSelectedDate } = useContext(EventDateContext);
+  const [firstDayInMonth, setFirstDayInMonth] = useState(
+    getFirstDayInMonth(currYear, currMonthIndex)
+  );
+  const [totalDaysInMonth, setTotalDaysInMonth] = useState(
+    getTotalDaysInMonth(currYear, currMonthIndex)
+  );
+  const { toggleState, toggleDispatch } = useContext(ToggleContext);
+  const { eventDayDispatch } = useContext(EventDayContext);
 
   const handleChangeMonth = (direction) => {
     switch (direction) {
@@ -143,55 +132,108 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
     setTotalDaysInMonth(getTotalDaysInMonth(currYear, currMonthIndex));
   }, [currYear, currMonthIndex]);
 
-  const onClose = () => {
-    setOpenModal(false);
-  };
-
-  const onCloseEdit = () => {
-    setOpenModalEdit(false);
-  };
-
   return (
     <>
       <div style={calendarStyle}>
         <div style={calendarHeaderStyle}>
           <div style={calendarHeaderMainGrpStyle}>
             <h1 style={calendarMonthStyle}>
-              {indexToMonth.get(currMonthIndex)} {currYear}
+              {query600
+                ? indexToMonth.get(currMonthIndex)
+                : indexToMonthShort.get(currMonthIndex)}{" "}
+              {currYear}
             </h1>
             {["left", "right"].map((direction) => {
-              return <ChangeMonthButton key={direction} handleChangeMonth={handleChangeMonth} direction={direction} />;
+              return (
+                <ChangeMonthButton
+                  key={direction}
+                  handleChangeMonth={handleChangeMonth}
+                  direction={direction}
+                />
+              );
             })}
             <button
               style={calendarButtonStyle}
               onClick={() => {
                 handleChangeMonth("reset");
-                setSelectedDate(today.getFullYear(), today.getMonth(), today.getDate());
-                onClose();
+                eventDayDispatch({
+                  type: "setEventYear",
+                  payload: today.getFullYear(),
+                });
+                eventDayDispatch({
+                  type: "setEventMonth",
+                  payload: today.getMonth(),
+                });
+                eventDayDispatch({
+                  type: "setEventDay",
+                  payload: today.getDate(),
+                });
+                toggleDispatch({ type: "closeModal" });
+                toggleDispatch({ type: "closeModalEdit" });
+                toggleDispatch({ type: "closeEventList" });
               }}
             >
-              Reset Date
+              Reset {query900 ? "Date" : ""}
             </button>
             <button
               style={calendarButtonStyle}
               onClick={() => {
-                setOpenModal(true);
+                toggleDispatch({ type: "openModal" });
               }}
             >
-              Add Event
+              Add {query900 ? "Event" : ""}
+            </button>
+            <button
+              style={{ ...calendarButtonStyle, backgroundColor: "" }}
+              onClick={() => {
+                if (
+                  JSON.parse(window.localStorage.getItem("eventList")) ===
+                    null ||
+                  JSON.parse(window.localStorage.getItem("eventList"))
+                    .length === 0
+                ) {
+                  return;
+                }
+                if (
+                  window.confirm(
+                    "Warning: You're about to delete all events from this calendar. Do you wish to continue?"
+                  )
+                ) {
+                  window.localStorage.clear();
+                  window.location.reload();
+                }
+              }}
+            >
+              Clear {query900 ? "Events" : ""}
             </button>
           </div>
-          <div>
-            {query1200 ? null : (
-              <button style={menuButtonStyle} onClick={handleOpenEventList}>
-                <img style={burgerMenuStyle} src={menu} alt="burger menu icon" />
-              </button>
-            )}
-          </div>
+          {query1200 ? null : query900 ? (
+            <button
+              style={menuButtonStyle}
+              onClick={() => {
+                if (toggleState.openEventList) {
+                  toggleDispatch({ type: "closeEventList" });
+                } else {
+                  toggleDispatch({ type: "openEventList" });
+                }
+              }}
+            >
+              <img style={burgerMenuStyle} src={menu} alt="burger menu icon" />
+            </button>
+          ) : null}
         </div>
         <div style={calendarGridStyle}>
           {weekdayNames.map((_weekday, index) => {
-            return <Weekday key={index} weekday={query900 ? indexToWeekday.get(index) : indexToWeekdayShort.get(index)} />;
+            return (
+              <Weekday
+                key={index}
+                weekday={
+                  query900
+                    ? indexToWeekday.get(index)
+                    : indexToWeekdayShort.get(index)
+                }
+              />
+            );
           })}
           {initialWeek.map((_day, index) => {
             switch (true) {
@@ -202,8 +244,6 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
                     day={index + 1 - firstDayInMonth.getDay()}
                     month={currMonthIndex}
                     year={currYear}
-                    setOpenModal={setOpenModal}
-                    setEventDate={setEventDate}
                   />
                 );
               case index < firstDayInMonth.getDay():
@@ -215,8 +255,6 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
                     day={index - firstDayInMonth.getDay() + 1}
                     month={currMonthIndex}
                     year={currYear}
-                    setOpenModal={setOpenModal}
-                    setEventDate={setEventDate}
                   />
                 );
               default:
@@ -224,11 +262,21 @@ const Calendar = ({ query1200, handleOpenEventList }) => {
             }
           })}
         </div>
-        <Modal openModal={openModal} onClose={onClose}>
-          <EventForm eventDate={eventDate} indexToMonth={indexToMonth} onClose={onClose} />
+        <Modal
+          openModal={toggleState.openModal}
+          onClose={() => {
+            toggleDispatch({ type: "closeModal" });
+          }}
+        >
+          <EventForm indexToMonth={indexToMonth} />
         </Modal>
-        <Modal openModal={openModalEdit} onClose={onCloseEdit}>
-          <EventEditForm eventDate={eventDate} indexToMonth={indexToMonth} onClose={onCloseEdit} />
+        <Modal
+          openModal={toggleState.openModalEdit}
+          onClose={() => {
+            toggleDispatch({ type: "closeModalEdit" });
+          }}
+        >
+          <EventEditForm indexToMonth={indexToMonth} />
         </Modal>
       </div>
     </>

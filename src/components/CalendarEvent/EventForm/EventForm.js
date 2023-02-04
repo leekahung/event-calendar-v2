@@ -1,11 +1,17 @@
 import { useContext } from "react";
-import { EventListContext } from "../../App";
-import { useField } from "../../hooks";
+import { EventDayContext, EventListContext, ToggleContext } from "../../../App";
+import { useField } from "../../../hooks";
 
-const EventForm = ({ indexToMonth, eventDate, onClose }) => {
+const EventForm = ({ indexToMonth }) => {
   const { clearValue: clearEventName, ...eventName } = useField("text");
-  const { clearValue: clearEventDescription, type, ...eventDescription } = useField("textarea");
+  const {
+    clearValue: clearEventDescription,
+    type,
+    ...eventDescription
+  } = useField("textarea");
   const { eventList, setEventList } = useContext(EventListContext);
+  const { toggleDispatch } = useContext(ToggleContext);
+  const { eventDayState } = useContext(EventDayContext);
 
   const generateId = () => {
     return Number((Math.random() * 10000000).toFixed(0));
@@ -13,17 +19,22 @@ const EventForm = ({ indexToMonth, eventDate, onClose }) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    console.log(eventDayState.eventMonth);
+    const monthCalendar =
+      eventDayState.eventMonth === 12 ? 1 : eventDayState.eventMonth + 1;
     const newEvent = {
-      date: eventDate,
+      date: new Date(
+        `${monthCalendar}/${eventDayState.eventDay}/${eventDayState.eventYear}`
+      ),
       name: eventName.value,
       description: eventDescription.value,
       id: generateId(),
     };
     setEventList(eventList.concat([newEvent]));
-    window.localStorage.setItem("eventList", JSON.stringify([eventList]));
+    window.localStorage.setItem("eventList", JSON.stringify(eventList));
     clearEventName();
     clearEventDescription();
-    onClose();
+    toggleDispatch({ type: "closeModal" });
   };
 
   const style = {
@@ -59,13 +70,19 @@ const EventForm = ({ indexToMonth, eventDate, onClose }) => {
       <form style={style} onSubmit={handleFormSubmit}>
         <div>Date:</div>
         <div>
-          {indexToMonth.get(eventDate.getMonth())} {eventDate.getDate()}, {eventDate.getFullYear()}
+          {indexToMonth.get(eventDayState.eventMonth)} {eventDayState.eventDay},{" "}
+          {eventDayState.eventYear}
         </div>
         <label>Event: </label>
         <input style={inputStyle} {...eventName} />
         <label style={fullWidthStyle}>Event Description: </label>
-        <textarea style={{ ...fullWidthStyle, ...textAreaStyle }} {...eventDescription} />
-        <button style={{ ...buttonStyle, gridColumn: "1 / 3", width: "70px" }}>submit</button>
+        <textarea
+          style={{ ...fullWidthStyle, ...textAreaStyle }}
+          {...eventDescription}
+        />
+        <button style={{ ...buttonStyle, gridColumn: "1 / 3", width: "70px" }}>
+          submit
+        </button>
       </form>
     </>
   );

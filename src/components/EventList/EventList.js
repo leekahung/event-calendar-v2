@@ -1,12 +1,50 @@
 import { useContext } from "react";
-import { EventDateContext, EventListContext, EventEditModalContext, EventIdContext } from "../../App";
+import { EventDayContext, EventListContext, ToggleContext } from "../../App";
 import { indexToMonth } from "../../utils/calendar-helper";
+import { useMediaQuery } from "../../hooks";
 
-const EventList = ({ style, handleOpenEventList }) => {
+const EventList = () => {
   const { eventList } = useContext(EventListContext);
-  const { selectedDate } = useContext(EventDateContext);
-  const { setOpenModalEdit } = useContext(EventEditModalContext);
-  const { setEventId } = useContext(EventIdContext);
+  const { eventDayState, eventDayDispatch } = useContext(EventDayContext);
+  const { toggleDispatch } = useContext(ToggleContext);
+
+  const query1200 = useMediaQuery("(min-width: 1200px)");
+  const query900 = useMediaQuery("(min-width: 900px)");
+
+  const eventListStyle1200 = !query1200
+    ? {
+        position: "absolute",
+        height: "100%",
+        width: "40%",
+      }
+    : null;
+
+  const eventListStyle900 = !query900
+    ? {
+        height: "50%",
+        width: "100%",
+        bottom: "0",
+      }
+    : null;
+
+  const eventListStyle = {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    backgroundColor: query1200 ? "white" : "rgba(255, 255, 255, 0.9)",
+    zIndex: "2",
+    overflowY: query900 ? "" : "scroll",
+    ...eventListStyle1200,
+    ...eventListStyle900,
+  };
+
+  const eventListCtnrStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    width: "100%",
+  };
 
   const eventBoxStyle = {
     display: "flex",
@@ -14,36 +52,43 @@ const EventList = ({ style, handleOpenEventList }) => {
     justifyContent: "center",
     marginBottom: "20px",
     width: "80%",
-    height: "10%",
+    height: "70px",
     border: "1px solid black",
     cursor: "pointer",
   };
 
   return (
-    <div style={style}>
+    <div style={eventListStyle} className="event-list">
       <h2>
-        {indexToMonth.get(selectedDate.month)} {selectedDate.day}, {selectedDate.year}
+        {indexToMonth.get(eventDayState.eventMonth)} {eventDayState.eventDay},{" "}
+        {eventDayState.eventYear}
       </h2>
-      {eventList.map((e) => {
-        const dayEvent = new Date(e.date);
-        if (dayEvent.getMonth() === selectedDate.month && dayEvent.getFullYear() === selectedDate.year && dayEvent.getDate() === selectedDate.day) {
-          return (
-            <button
-              style={eventBoxStyle}
-              key={e.id}
-              onClick={() => {
-                setEventId(e.id);
-                setOpenModalEdit(true);
-                handleOpenEventList();
-              }}
-            >
-              {e.name}
-            </button>
-          );
-        } else {
-          return null;
-        }
-      })}
+      <div style={eventListCtnrStyle}>
+        {eventList.map((e) => {
+          const dayEvent = new Date(e.date);
+          if (
+            dayEvent.getFullYear() === eventDayState.eventYear &&
+            dayEvent.getMonth() === eventDayState.eventMonth &&
+            dayEvent.getDate() === eventDayState.eventDay
+          ) {
+            return (
+              <button
+                style={eventBoxStyle}
+                key={e.id}
+                onClick={() => {
+                  eventDayDispatch({ type: "setEventId", payload: e.id });
+                  toggleDispatch({ type: "openModalEdit" });
+                  toggleDispatch({ type: "closeEventList" });
+                }}
+              >
+                {e.name}
+              </button>
+            );
+          } else {
+            return null;
+          }
+        })}
+      </div>
     </div>
   );
 };
