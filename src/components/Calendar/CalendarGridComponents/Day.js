@@ -94,7 +94,22 @@ const Day = ({ year, month, day }) => {
         <div style={{ position: "relative" }}>
           <span style={dateStyle}>{day}</span>
         </div>
-        <span style={eventStyle}>{numEvents ? numEvents : null}</span>
+        <span style={eventStyle}>
+          {numEvents ? (
+            query600 ? (
+              numEvents
+            ) : (
+              <div
+                style={{
+                  height: "3px",
+                  width: "3px",
+                  borderRadius: "3px",
+                  backgroundColor: "black",
+                }}
+              ></div>
+            )
+          ) : null}
+        </span>
       </button>
     </>
   );
