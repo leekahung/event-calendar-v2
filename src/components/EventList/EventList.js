@@ -13,6 +13,7 @@ const EventList = () => {
 
   const eventListStyle1200 = !query1200
     ? {
+        visibility: toggleState.openEventList ? "" : "hidden",
         position: "absolute",
         height: "100%",
         width: "40%",
@@ -21,6 +22,7 @@ const EventList = () => {
 
   const eventListStyle900 = !query900
     ? {
+        visibility: "",
         height: "50%",
         width: "100%",
         bottom: "0",
@@ -28,7 +30,6 @@ const EventList = () => {
     : null;
 
   const eventListStyle = {
-    visibility: !query900 ? "" : toggleState.openEventList ? "" : "hidden",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
