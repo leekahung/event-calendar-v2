@@ -7,7 +7,7 @@ body {
 }
 
 body {
-  background-color: lightgrey;
+  background-color: rgb(180, 200, 190);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }

@@ -6,7 +6,7 @@ import { useMediaQuery } from "../../hooks";
 const EventList = () => {
   const { eventList } = useContext(EventListContext);
   const { eventDayState, eventDayDispatch } = useContext(EventDayContext);
-  const { toggleDispatch } = useContext(ToggleContext);
+  const { toggleState, toggleDispatch } = useContext(ToggleContext);
 
   const query1200 = useMediaQuery("(min-width: 1200px)");
   const query900 = useMediaQuery("(min-width: 900px)");
@@ -28,10 +28,11 @@ const EventList = () => {
     : null;
 
   const eventListStyle = {
+    visibility: !query900 ? "" : toggleState.openEventList ? "" : "hidden",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: query1200 ? "white" : "rgba(255, 255, 255, 0.9)",
+    backgroundColor: query1200 ? "white" : "rgba(255, 255, 255, 0.95)",
     zIndex: "2",
     overflowY: query900 ? "" : "scroll",
     ...eventListStyle1200,

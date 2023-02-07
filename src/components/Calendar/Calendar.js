@@ -25,7 +25,6 @@ const Calendar = ({ query1200 }) => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: query900 ? "center" : "flex-start",
     position: "relative",
     height: "100%",
   };
@@ -37,9 +36,9 @@ const Calendar = ({ query1200 }) => {
     height: "100%",
     width: "95%",
     gridTemplateColumns: "repeat(7, 1fr)",
-    gridTemplateRows: "40px repeat(6, 1fr)",
+    gridTemplateRows: query900 ? "40px repeat(6, 1fr)" : "30px repeat(6, 1fr)",
     gridGap: "1px",
-    marginBottom: "20px",
+    marginBottom: "30px",
   };
 
   const calendarHeaderStyle = {
@@ -47,7 +46,7 @@ const Calendar = ({ query1200 }) => {
     alignItems: "center",
     justifyContent: "space-around",
     width: "100%",
-    padding: query600 ? "20px" : "10px",
+    padding: query900 ? "20px" : "10px",
   };
 
   const calendarHeaderMainGrpStyle = {
@@ -70,7 +69,10 @@ const Calendar = ({ query1200 }) => {
   };
 
   const menuButtonStyle = {
-    backgroundColor: "lightgrey",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgb(180, 200, 190)",
     border: "none",
     height: "50px",
     width: "50px",
@@ -227,6 +229,7 @@ const Calendar = ({ query1200 }) => {
             return (
               <Weekday
                 key={index}
+                index={index}
                 weekday={
                   query900
                     ? indexToWeekday.get(index)
@@ -241,24 +244,26 @@ const Calendar = ({ query1200 }) => {
                 return (
                   <Day
                     key={index}
+                    index={index}
                     day={index + 1 - firstDayInMonth.getDay()}
                     month={currMonthIndex}
                     year={currYear}
                   />
                 );
               case index < firstDayInMonth.getDay():
-                return <DayPlaceholder key={index} />;
+                return <DayPlaceholder key={index} index={index} />;
               case index - firstDayInMonth.getDay() + 1 <= totalDaysInMonth:
                 return (
                   <Day
                     key={index}
+                    index={index}
                     day={index - firstDayInMonth.getDay() + 1}
                     month={currMonthIndex}
                     year={currYear}
                   />
                 );
               default:
-                return <DayPlaceholder key={index} />;
+                return <DayPlaceholder key={index} index={index} />;
             }
           })}
         </div>

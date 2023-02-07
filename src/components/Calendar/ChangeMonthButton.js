@@ -6,30 +6,35 @@ import { useMediaQuery } from "../../hooks";
 const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
   const query900 = useMediaQuery("(min-width: 900px)");
   const query600 = useMediaQuery("(min-width: 600px)");
-  const [isHover, setIsHover] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [mouseState, setMouseState] = useState({
+    isHover: false,
+    isClicked: false,
+  });
 
-  const handleMouseEnter = () => {
-    setIsHover(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHover(false);
-  };
-
-  const handleMouseDown = () => {
-    setIsClicked(true);
-  };
-
-  const handleMouseUp = () => {
-    setIsClicked(false);
+  const handleMouseState = (mouseEvent) => {
+    switch (mouseEvent) {
+      case "enter":
+        setMouseState({ ...mouseState, isHover: true });
+        break;
+      case "leave":
+        setMouseState({ ...mouseState, isHover: false });
+        break;
+      case "down":
+        setMouseState({ ...mouseState, isClicked: true });
+        break;
+      case "up":
+        setMouseState({ ...mouseState, isClicked: false });
+        break;
+      default:
+        break;
+    }
   };
 
   const calendarButtonMonthStyle = {
     display: "flex",
     alignItems: "center",
-    backgroundColor: isHover
-      ? isClicked
+    backgroundColor: mouseState.isHover
+      ? mouseState.isClicked
         ? "rgb(230, 230, 230)"
         : "grey"
       : "white",
@@ -44,10 +49,10 @@ const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
     <button
       style={calendarButtonMonthStyle}
       onClick={() => handleChangeMonth(direction)}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      onMouseEnter={() => handleMouseState("enter")}
+      onMouseLeave={() => handleMouseState("leave")}
+      onMouseDown={() => handleMouseState("down")}
+      onMouseUp={() => handleMouseState("up")}
     >
       {direction === "left" ? (
         <img

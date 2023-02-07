@@ -92,15 +92,7 @@ function App() {
       <EventDayContext.Provider value={{ eventDayState, eventDayDispatch }}>
         <ToggleContext.Provider value={{ toggleState, toggleDispatch }}>
           <EventListContext.Provider value={{ eventList, setEventList }}>
-            {query1200 ? (
-              <EventList />
-            ) : query900 ? (
-              toggleState.openEventList ? (
-                <EventList />
-              ) : null
-            ) : (
-              <EventList />
-            )}
+            <EventList />
             <Calendar query1200={query1200} />
           </EventListContext.Provider>
         </ToggleContext.Provider>
