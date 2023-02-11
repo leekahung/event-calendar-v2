@@ -56,8 +56,10 @@ const Calendar = ({ query1200 }) => {
   };
 
   const calendarMonthStyle = {
+    display: "flex",
+    justifyContent: "center",
     width: query900 ? "250px" : query600 ? "180px" : query400 ? "90px" : "80px",
-    fontSize: query900 ? "" : query600 ? "26px" : query400 ? "20px" : "18px",
+    fontSize: query900 ? "" : query600 ? "23px" : query400 ? "20px" : "18px",
     margin: "0",
   };
 
