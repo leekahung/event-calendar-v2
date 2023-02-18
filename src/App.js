@@ -1,45 +1,13 @@
 import { createContext, useEffect, useState, useReducer } from "react";
+import { useMediaQuery } from "./hooks";
 import Calendar from "./components/Calendar/Calendar";
 import EventList from "./components/EventList/EventList";
-import { useMediaQuery } from "./hooks";
+import toggleReducer from "./reducers/toggleReducer";
+import eventReducer from "./reducers/eventReducer";
 
 export const EventListContext = createContext(null);
 export const ToggleContext = createContext(null);
 export const EventDayContext = createContext(null);
-
-const toggleReducer = (state, action) => {
-  switch (action.type) {
-    case "openModal":
-      return { ...state, openModal: true };
-    case "openModalEdit":
-      return { ...state, openModalEdit: true };
-    case "openEventList":
-      return { ...state, openEventList: true };
-    case "closeModal":
-      return { ...state, openModal: false };
-    case "closeModalEdit":
-      return { ...state, openModalEdit: false };
-    case "closeEventList":
-      return { ...state, openEventList: false };
-    default:
-      return state;
-  }
-};
-
-const eventReducer = (state, action) => {
-  switch (action.type) {
-    case "setEventYear":
-      return { ...state, eventYear: action.payload };
-    case "setEventMonth":
-      return { ...state, eventMonth: action.payload };
-    case "setEventDay":
-      return { ...state, eventDay: action.payload };
-    case "setEventId":
-      return { ...state, eventId: action.payload };
-    default:
-      return state;
-  }
-};
 
 function App() {
   const initialToggleState = {

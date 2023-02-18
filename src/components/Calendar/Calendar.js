@@ -11,6 +11,7 @@ import {
   indexToWeekdayShort,
 } from "../../utils/calendar-helper";
 import menu from "../../assets/img/menu.png";
+import IconButton from "@mui/material/IconButton";
 import { useMediaQuery } from "../../hooks";
 
 const Calendar = ({ query1200 }) => {
@@ -67,17 +68,6 @@ const Calendar = ({ query1200 }) => {
     height: query900 ? "40px" : "30px",
     width: query900 ? "60px" : "50px",
     fontSize: "13px",
-    cursor: "pointer",
-  };
-
-  const menuButtonStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgb(180, 200, 190)",
-    border: "none",
-    height: "50px",
-    width: "50px",
     cursor: "pointer",
   };
 
@@ -212,18 +202,23 @@ const Calendar = ({ query1200 }) => {
             </button>
           </div>
           {query1200 ? null : query900 ? (
-            <button
-              style={menuButtonStyle}
-              onClick={() => {
-                if (toggleState.openEventList) {
-                  toggleDispatch({ type: "closeEventList" });
-                } else {
-                  toggleDispatch({ type: "openEventList" });
-                }
-              }}
-            >
-              <img style={burgerMenuStyle} src={menu} alt="burger menu icon" />
-            </button>
+            <>
+              <IconButton
+                onClick={() => {
+                  if (toggleState.openEventList) {
+                    toggleDispatch({ type: "closeEventList" });
+                  } else {
+                    toggleDispatch({ type: "openEventList" });
+                  }
+                }}
+              >
+                <img
+                  style={burgerMenuStyle}
+                  src={menu}
+                  alt="burger menu icon"
+                />
+              </IconButton>
+            </>
           ) : null}
         </div>
         <div style={calendarGridStyle}>

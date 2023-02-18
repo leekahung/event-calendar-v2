@@ -1,73 +1,32 @@
-import { useState } from "react";
-import leftChevron from "../../assets/img/left-chevron.png";
-import rightChevron from "../../assets/img/right-chevron.png";
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useMediaQuery } from "../../hooks";
 
 const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
   const query900 = useMediaQuery("(min-width: 900px)");
-  const query600 = useMediaQuery("(min-width: 600px)");
-  const [mouseState, setMouseState] = useState({
-    isHover: false,
-    isClicked: false,
-  });
-
-  const handleMouseState = (mouseEvent) => {
-    switch (mouseEvent) {
-      case "enter":
-        setMouseState({ ...mouseState, isHover: true });
-        break;
-      case "leave":
-        setMouseState({ ...mouseState, isHover: false });
-        break;
-      case "down":
-        setMouseState({ ...mouseState, isClicked: true });
-        break;
-      case "up":
-        setMouseState({ ...mouseState, isClicked: false });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const calendarButtonMonthStyle = {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: mouseState.isHover
-      ? mouseState.isClicked
-        ? "rgb(230, 230, 230)"
-        : "grey"
-      : "white",
-    height: query900 ? "40px" : query600 ? "30px" : "25px",
-    width: query900 ? "40px" : query600 ? "30px" : "25px",
-    borderRadius: "20px",
-    border: "none",
-    cursor: "pointer",
-  };
 
   return (
-    <button
-      style={calendarButtonMonthStyle}
+    <IconButton
+      aria-label={direction === "left" ? "previous month" : "next month"}
       onClick={() => handleChangeMonth(direction)}
-      onMouseEnter={() => handleMouseState("enter")}
-      onMouseLeave={() => handleMouseState("leave")}
-      onMouseDown={() => handleMouseState("down")}
-      onMouseUp={() => handleMouseState("up")}
+      sx={{
+        height: query900 ? "40px" : "30px",
+        width: query900 ? "40px" : "30px",
+        backgroundColor: "white",
+        borderRadius: "40px",
+        "&:hover": {
+          backgroundColor: "rgb(230, 230, 230)",
+          "&:active": { backgroundColor: "grey" },
+        },
+      }}
     >
       {direction === "left" ? (
-        <img
-          style={{ height: "70%", width: "100%", marginRight: "10px" }}
-          src={leftChevron}
-          alt="left-pointing cheveron icon"
-        />
+        <KeyboardArrowLeftIcon xs={{ color: "black" }} />
       ) : (
-        <img
-          style={{ height: "70%", width: "100%", marginLeft: "2px" }}
-          src={rightChevron}
-          alt="right-pointing cheveron icon"
-        />
+        <KeyboardArrowRightIcon xs={{ color: "black" }} />
       )}
-    </button>
+    </IconButton>
   );
 };
 
