@@ -1,53 +1,13 @@
 import { EventDayContext, EventListContext } from "../../../App";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useMediaQuery } from "../../../hooks";
+import Button from "@mui/material/Button";
 
 const Day = ({ index, year, month, day }) => {
   const { eventDayState, eventDayDispatch } = useContext(EventDayContext);
   const { eventList } = useContext(EventListContext);
-  const [mouseState, setMouseState] = useState({
-    isHover: false,
-    isClicked: false,
-  });
   const query900 = useMediaQuery("(min-width: 900px)");
   const query600 = useMediaQuery("(min-width: 600px)");
-
-  const handleMouseState = (mouseEvent) => {
-    switch (mouseEvent) {
-      case "enter":
-        setMouseState({ ...mouseState, isHover: true });
-        break;
-      case "leave":
-        setMouseState({ ...mouseState, isHover: false });
-        break;
-      case "down":
-        setMouseState({ ...mouseState, isClicked: true });
-        break;
-      case "up":
-        setMouseState({ ...mouseState, isClicked: false });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const style = {
-    position: "relative",
-    display: "flex",
-    justifyContent: query600 ? "0" : "center",
-    fontSize: query900 ? "16px" : "14px",
-    backgroundColor:
-      index % 7 === 0 || index % 7 === 6
-        ? "rgb(240, 240, 240)"
-        : mouseState.isHover
-        ? mouseState.isClicked
-          ? "rgb(250, 230, 230)"
-          : "rgb(250, 200, 200)"
-        : "white",
-    padding: query900 ? "15px 20px" : query600 ? "10px" : "5px 0",
-    border: "none",
-    cursor: "pointer",
-  };
 
   const dateStyle = {
     display: "flex",
@@ -83,19 +43,29 @@ const Day = ({ index, year, month, day }) => {
 
   return (
     <>
-      <button
-        style={style}
+      <Button
+        sx={{
+          position: "relative",
+          fontSize: query900 ? "16px" : "14px",
+          borderRadius: 0,
+          padding: query900 ? "15px 20px" : query600 ? "10px" : "5px 0",
+          color: "rgb(30, 30, 30)",
+          backgroundColor:
+            index % 7 === 0 || index % 7 === 6 ? "rgb(240, 240, 240)" : "white",
+          "&:hover": {
+            backgroundColor: "rgb(200, 160, 200)",
+            "&:active": {
+              backgroundColor: "lightgrey",
+            },
+          },
+        }}
         onClick={() => {
           eventDayDispatch({ type: "setEventYear", payload: year });
           eventDayDispatch({ type: "setEventMonth", payload: month });
           eventDayDispatch({ type: "setEventDay", payload: day });
         }}
-        onMouseEnter={() => handleMouseState("enter")}
-        onMouseLeave={() => handleMouseState("leave")}
-        onMouseDown={() => handleMouseState("down")}
-        onMouseUp={() => handleMouseState("up")}
       >
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "absolute", top: "20%" }}>
           <span style={dateStyle}>{day}</span>
         </div>
         <span style={eventStyle}>
@@ -114,7 +84,7 @@ const Day = ({ index, year, month, day }) => {
             )
           ) : null}
         </span>
-      </button>
+      </Button>
     </>
   );
 };
