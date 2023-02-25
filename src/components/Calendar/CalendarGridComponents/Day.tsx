@@ -3,7 +3,14 @@ import { useContext } from "react";
 import { useMediaQuery } from "../../../hooks";
 import Button from "@mui/material/Button";
 
-const Day = ({ index, year, month, day }) => {
+interface Props {
+  index: number;
+  year: number;
+  month: number;
+  day: number;
+}
+
+const Day = ({ index, year, month, day }: Props) => {
   const { eventDayState, eventDayDispatch } = useContext(EventDayContext);
   const { eventList } = useContext(EventListContext);
   const query900 = useMediaQuery("(min-width: 900px)");
@@ -21,19 +28,20 @@ const Day = ({ index, year, month, day }) => {
       }) === JSON.stringify({ year, month, day })
         ? "lightblue"
         : "",
-    height: "30px",
-    width: "30px",
+    height: query600 ? "30px" : "25px",
+    width: query600 ? "30px" : "25px",
     borderRadius: "20px",
   };
 
-  const eventStyle = {
+  const eventStyle: React.CSSProperties = {
     position: "absolute",
     bottom: "10%",
     right: "15%",
   };
 
-  const numEvents = eventList.filter((e) => {
-    const eventDay = new Date(e.date);
+  const numEvents = eventList!.filter((e) => {
+    const eventDate = e.date as Date;
+    const eventDay = new Date(eventDate);
     return eventDay.getDate() === day &&
       eventDay.getMonth() === month &&
       eventDay.getFullYear() === year
@@ -48,7 +56,7 @@ const Day = ({ index, year, month, day }) => {
           position: "relative",
           fontSize: query900 ? "16px" : "14px",
           borderRadius: 0,
-          padding: query900 ? "15px 20px" : query600 ? "10px" : "5px 0",
+          minWidth: "20px",
           color: "rgb(30, 30, 30)",
           backgroundColor:
             index % 7 === 0 || index % 7 === 6 ? "rgb(240, 240, 240)" : "white",
@@ -65,7 +73,7 @@ const Day = ({ index, year, month, day }) => {
           eventDayDispatch({ type: "setEventDay", payload: day });
         }}
       >
-        <div style={{ position: "absolute", top: "20%" }}>
+        <div style={{ position: "absolute", top: "15%" }}>
           <span style={dateStyle}>{day}</span>
         </div>
         <span style={eventStyle}>

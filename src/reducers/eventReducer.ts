@@ -1,4 +1,7 @@
-const eventReducer = (state, action) => {
+const eventReducer = (
+  state: IEventReducerState,
+  action: IEventReducerAction
+): IEventReducerState => {
   switch (action.type) {
     case "setEventYear":
       return { ...state, eventYear: action.payload };

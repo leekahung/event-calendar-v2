@@ -1,27 +1,48 @@
-import { createContext, useEffect, useState, useReducer } from "react";
+import React, { createContext, useEffect, useState, useReducer } from "react";
 import { useMediaQuery } from "./hooks";
 import Calendar from "./components/Calendar/Calendar";
 import EventList from "./components/EventList/EventList";
 import toggleReducer from "./reducers/toggleReducer";
 import eventReducer from "./reducers/eventReducer";
 
-export const EventListContext = createContext(null);
-export const ToggleContext = createContext(null);
-export const EventDayContext = createContext(null);
+const initialToggleState: IToggleReducerState = {
+  openModal: false,
+  openModalEdit: false,
+  openEventList: false,
+};
+const initialEventDay: IEventReducerState = {
+  eventYear: new Date().getFullYear(),
+  eventMonth: new Date().getMonth(),
+  eventDay: new Date().getDate(),
+  eventId: 0,
+};
+
+type TCalenderEventContext = {
+  eventList: ICalendarEventState[];
+  setEventList: React.Dispatch<React.SetStateAction<ICalendarEventState[]>>;
+};
+
+export const EventListContext = createContext<TCalenderEventContext>({
+  eventList: [],
+  setEventList: () => {},
+});
+export const ToggleContext = createContext<{
+  toggleState: IToggleReducerState;
+  toggleDispatch: React.Dispatch<IToggleReducerAction>;
+}>({
+  toggleState: initialToggleState,
+  toggleDispatch: () => undefined,
+});
+export const EventDayContext = createContext<{
+  eventDayState: IEventReducerState;
+  eventDayDispatch: React.Dispatch<IEventReducerAction>;
+}>({
+  eventDayState: initialEventDay,
+  eventDayDispatch: () => undefined,
+});
 
 function App() {
-  const initialToggleState = {
-    openModal: false,
-    openModalEdit: false,
-    openEventList: false,
-  };
-  const initialEventDay = {
-    eventYear: new Date().getFullYear(),
-    eventMonth: new Date().getMonth(),
-    eventDay: new Date().getDate(),
-    eventId: 0,
-  };
-  let [eventList, setEventList] = useState([]);
+  let [eventList, setEventList] = useState<ICalendarEventState[]>([]);
   const [toggleState, toggleDispatch] = useReducer(
     toggleReducer,
     initialToggleState
@@ -32,11 +53,12 @@ function App() {
   );
 
   useEffect(() => {
-    if (eventList.length !== 0) {
+    if (eventList?.length !== 0) {
       window.localStorage.setItem("eventList", JSON.stringify(eventList));
     } else {
-      if (window.localStorage.getItem("eventList")) {
-        setEventList(JSON.parse(window.localStorage.getItem("eventList")));
+      const localEventList = window.localStorage.getItem("eventList");
+      if (localEventList) {
+        setEventList(JSON.parse(localEventList));
       }
     }
   }, [eventList]);
@@ -44,7 +66,7 @@ function App() {
   const query1200 = useMediaQuery("(min-width: 1200px)");
   const query900 = useMediaQuery("(min-width: 900px)");
 
-  const style = {
+  const style: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: query1200 ? "1fr 3fr" : "1fr",
     gridTemplateRows: query900 ? "" : "1fr 1fr",

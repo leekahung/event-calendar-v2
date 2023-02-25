@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Day, DayPlaceholder, Weekday } from "./CalendarGridComponents";
 import ChangeMonthButton from "./ChangeMonthButton";
 import Modal from "../CalendarEvent/Modal";
-import { EventEditForm, EventForm } from "../CalendarEvent/EventForm/";
+import { EventEditForm, EventForm } from "../CalendarEvent/EventForm";
 import { EventDayContext, ToggleContext } from "../../App";
 import {
   indexToMonth,
@@ -14,7 +14,11 @@ import menu from "../../assets/img/menu.png";
 import IconButton from "@mui/material/IconButton";
 import { useMediaQuery } from "../../hooks";
 
-const Calendar = ({ query1200 }) => {
+interface Props {
+  query1200: boolean;
+}
+
+const Calendar = ({ query1200 }: Props) => {
   const query900 = useMediaQuery("(min-width: 900px)");
   const query600 = useMediaQuery("(min-width: 600px)");
   const query400 = useMediaQuery("(min-width: 400px)");
@@ -22,7 +26,7 @@ const Calendar = ({ query1200 }) => {
   const weekdayNames = Array(7).fill(0);
   const initialWeek = Array(42).fill(0);
 
-  const calendarStyle = {
+  const calendarStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -30,7 +34,7 @@ const Calendar = ({ query1200 }) => {
     height: "100%",
   };
 
-  const calendarGridStyle = {
+  const calendarGridStyle: React.CSSProperties = {
     display: "grid",
     backgroundColor: "black",
     border: "1px solid black",
@@ -42,7 +46,7 @@ const Calendar = ({ query1200 }) => {
     marginBottom: "30px",
   };
 
-  const calendarHeaderStyle = {
+  const calendarHeaderStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
@@ -50,13 +54,13 @@ const Calendar = ({ query1200 }) => {
     padding: query900 ? "20px" : "10px",
   };
 
-  const calendarHeaderMainGrpStyle = {
+  const calendarHeaderMainGrpStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     gap: query600 ? "20px" : query400 ? "10px" : "3px",
   };
 
-  const calendarMonthStyle = {
+  const calendarMonthStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
     width: query900 ? "250px" : query600 ? "180px" : query400 ? "90px" : "80px",
@@ -64,24 +68,24 @@ const Calendar = ({ query1200 }) => {
     margin: "0",
   };
 
-  const calendarButtonStyle = {
+  const calendarButtonStyle: React.CSSProperties = {
     height: query900 ? "40px" : "30px",
     width: query900 ? "60px" : "50px",
     fontSize: "13px",
     cursor: "pointer",
   };
 
-  const burgerMenuStyle = {
+  const burgerMenuStyle: React.CSSProperties = {
     backgroundColor: "none",
     height: "40px",
     width: "40px",
   };
 
   const today = new Date();
-  const getFirstDayInMonth = (year, monthIndex) => {
+  const getFirstDayInMonth = (year: number, monthIndex: number) => {
     return new Date(year, monthIndex, 1);
   };
-  const getTotalDaysInMonth = (year, monthIndex) => {
+  const getTotalDaysInMonth = (year: number, monthIndex: number) => {
     return new Date(year, monthIndex + 1, 0).getDate();
   };
 
@@ -96,7 +100,7 @@ const Calendar = ({ query1200 }) => {
   const { toggleState, toggleDispatch } = useContext(ToggleContext);
   const { eventDayDispatch } = useContext(EventDayContext);
 
-  const handleChangeMonth = (direction) => {
+  const handleChangeMonth = (direction: string) => {
     switch (direction) {
       case "left":
         if (currMonthIndex === 0) {
@@ -180,12 +184,8 @@ const Calendar = ({ query1200 }) => {
             <button
               style={{ ...calendarButtonStyle, backgroundColor: "" }}
               onClick={() => {
-                if (
-                  JSON.parse(window.localStorage.getItem("eventList")) ===
-                    null ||
-                  JSON.parse(window.localStorage.getItem("eventList"))
-                    .length === 0
-                ) {
+                const localEventList = window.localStorage.getItem("eventList");
+                if (!localEventList) {
                   return;
                 }
                 if (
@@ -223,17 +223,10 @@ const Calendar = ({ query1200 }) => {
         </div>
         <div style={calendarGridStyle}>
           {weekdayNames.map((_weekday, index) => {
-            return (
-              <Weekday
-                key={index}
-                index={index}
-                weekday={
-                  query900
-                    ? indexToWeekday.get(index)
-                    : indexToWeekdayShort.get(index)
-                }
-              />
-            );
+            const weekday = query900
+              ? (indexToWeekday.get(index) as string)
+              : (indexToWeekdayShort.get(index) as string);
+            return <Weekday key={index} index={index} weekday={weekday} />;
           })}
           {initialWeek.map((_day, index) => {
             switch (true) {

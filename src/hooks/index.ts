@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-export const useField = (type) => {
+export const useField = (type: string) => {
   const [value, setValue] = useState("");
 
-  const onChange = (event) => {
+  const onChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setValue(event.target.value);
   };
 
@@ -19,7 +21,7 @@ export const useField = (type) => {
   };
 };
 
-export const useMediaQuery = (query) => {
+export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {

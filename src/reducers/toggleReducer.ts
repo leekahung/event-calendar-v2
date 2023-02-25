@@ -1,4 +1,7 @@
-const toggleReducer = (state, action) => {
+const toggleReducer = (
+  state: IToggleReducerState,
+  action: IToggleReducerAction
+): IToggleReducerState => {
   switch (action.type) {
     case "openModal":
       return { ...state, openModal: true };

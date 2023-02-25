@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { EventDayContext, EventListContext, ToggleContext } from "../../App";
 import { indexToMonth } from "../../utils/calendar-helper";
 import { useMediaQuery } from "../../hooks";
@@ -12,35 +12,35 @@ const EventList = () => {
   const query900 = useMediaQuery("(min-width: 900px)");
 
   const eventListStyle1200 = !query1200
-    ? {
+    ? ({
         visibility: toggleState.openEventList ? "" : "hidden",
         position: "absolute",
         height: "100%",
         width: "40%",
-      }
+      } as IEventListStyle1200)
     : null;
 
   const eventListStyle900 = !query900
-    ? {
+    ? ({
         visibility: "",
         height: "50%",
         width: "100%",
         bottom: "0",
-      }
+      } as IEventListStyle900)
     : null;
 
-  const eventListStyle = {
+  let eventListStyle: eventListStyle = {
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
     backgroundColor: query1200 ? "white" : "rgba(255, 255, 255, 0.95)",
     zIndex: "2",
-    overflowY: query900 ? "" : "scroll",
+    overflowY: query900 ? "hidden" : "scroll",
     ...eventListStyle1200,
     ...eventListStyle900,
   };
 
-  const eventListCtnrStyle = {
+  const eventListCtnrStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -48,7 +48,7 @@ const EventList = () => {
     width: "100%",
   };
 
-  const eventBoxStyle = {
+  const eventBoxStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -67,7 +67,9 @@ const EventList = () => {
       </h2>
       <div style={eventListCtnrStyle}>
         {eventList.map((e) => {
-          const dayEvent = new Date(e.date);
+          const eventDate = e.date as Date;
+          const eventId = e.id as number;
+          const dayEvent = new Date(eventDate);
           if (
             dayEvent.getFullYear() === eventDayState.eventYear &&
             dayEvent.getMonth() === eventDayState.eventMonth &&
@@ -78,7 +80,7 @@ const EventList = () => {
                 style={eventBoxStyle}
                 key={e.id}
                 onClick={() => {
-                  eventDayDispatch({ type: "setEventId", payload: e.id });
+                  eventDayDispatch({ type: "setEventId", payload: eventId });
                   toggleDispatch({ type: "openModalEdit" });
                   toggleDispatch({ type: "closeEventList" });
                 }}

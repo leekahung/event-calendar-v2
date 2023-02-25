@@ -1,11 +1,17 @@
 import closeBtn from "../../assets/img/close.png";
 
-export default function Modal({ openModal, onClose, children }) {
+interface Props {
+  openModal: boolean;
+  onClose: () => void;
+  children: JSX.Element;
+}
+
+export default function Modal({ openModal, onClose, children }: Props) {
   if (!openModal) {
     return null;
   }
 
-  const modalStyle = {
+  const modalStyle: React.CSSProperties = {
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -19,20 +25,20 @@ export default function Modal({ openModal, onClose, children }) {
     zIndex: 3,
   };
 
-  const buttonStyle = {
+  const buttonStyle: React.CSSProperties = {
     position: "absolute",
     top: "20px",
     right: "20px",
     display: "flex",
     alignItems: "center",
-    justifyContents: "center",
+    justifyContent: "center",
     padding: "5px",
     backgroundColor: "lightgrey",
     border: "none",
     cursor: "pointer",
   };
 
-  const buttonImgStyle = {
+  const buttonImgStyle: React.CSSProperties = {
     width: "15px",
     height: "15px",
   };

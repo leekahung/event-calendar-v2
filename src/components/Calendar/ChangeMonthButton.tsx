@@ -3,7 +3,12 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useMediaQuery } from "../../hooks";
 
-const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
+interface Props {
+  handleChangeMonth: (direction: string) => void;
+  direction: string;
+}
+
+const ChangeMonthButton = ({ handleChangeMonth, direction }: Props) => {
   const query900 = useMediaQuery("(min-width: 900px)");
 
   return (
@@ -22,9 +27,9 @@ const ChangeMonthButton = ({ handleChangeMonth, direction }) => {
       }}
     >
       {direction === "left" ? (
-        <KeyboardArrowLeftIcon xs={{ color: "black" }} />
+        <KeyboardArrowLeftIcon />
       ) : (
-        <KeyboardArrowRightIcon xs={{ color: "black" }} />
+        <KeyboardArrowRightIcon />
       )}
     </IconButton>
   );

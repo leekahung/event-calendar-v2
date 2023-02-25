@@ -1,6 +1,11 @@
 import { useMediaQuery } from "../../../hooks";
 
-const Weekday = ({ index, weekday }) => {
+interface Props {
+  index: number;
+  weekday: string;
+}
+
+const Weekday = ({ index, weekday }: Props) => {
   const query900 = useMediaQuery("(min-width: 900px)");
   const query600 = useMediaQuery("(min-width: 600px)");
 
