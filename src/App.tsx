@@ -1,45 +1,16 @@
-import React, { createContext, useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { useMediaQuery } from "./hooks";
 import Calendar from "./components/Calendar/Calendar";
 import EventList from "./components/EventList/EventList";
 import toggleReducer from "./reducers/toggleReducer";
 import eventReducer from "./reducers/eventReducer";
-
-const initialToggleState: IToggleReducerState = {
-  openModal: false,
-  openModalEdit: false,
-  openEventList: false,
-};
-const initialEventDay: IEventReducerState = {
-  eventYear: new Date().getFullYear(),
-  eventMonth: new Date().getMonth(),
-  eventDay: new Date().getDate(),
-  eventId: 0,
-};
-
-type TCalenderEventContext = {
-  eventList: ICalendarEventState[];
-  setEventList: React.Dispatch<React.SetStateAction<ICalendarEventState[]>>;
-};
-
-export const EventListContext = createContext<TCalenderEventContext>({
-  eventList: [],
-  setEventList: () => {},
-});
-export const ToggleContext = createContext<{
-  toggleState: IToggleReducerState;
-  toggleDispatch: React.Dispatch<IToggleReducerAction>;
-}>({
-  toggleState: initialToggleState,
-  toggleDispatch: () => undefined,
-});
-export const EventDayContext = createContext<{
-  eventDayState: IEventReducerState;
-  eventDayDispatch: React.Dispatch<IEventReducerAction>;
-}>({
-  eventDayState: initialEventDay,
-  eventDayDispatch: () => undefined,
-});
+import {
+  initialToggleState,
+  initialEventDay,
+  EventListContext,
+  ToggleContext,
+  EventDayContext,
+} from "./context";
 
 function App() {
   let [eventList, setEventList] = useState<ICalendarEventState[]>([]);

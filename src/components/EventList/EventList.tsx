@@ -1,5 +1,9 @@
 import React, { useContext } from "react";
-import { EventDayContext, EventListContext, ToggleContext } from "../../App";
+import {
+  EventDayContext,
+  EventListContext,
+  ToggleContext,
+} from "../../context";
 import { indexToMonth } from "../../utils/calendar-helper";
 import { useMediaQuery } from "../../hooks";
 

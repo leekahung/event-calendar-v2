@@ -3,7 +3,7 @@ import { Day, DayPlaceholder, Weekday } from "./CalendarGridComponents";
 import ChangeMonthButton from "./ChangeMonthButton";
 import Modal from "../CalendarEvent/Modal";
 import { EventEditForm, EventForm } from "../CalendarEvent/EventForm";
-import { EventDayContext, ToggleContext } from "../../App";
+import { EventDayContext, ToggleContext } from "../../context";
 import {
   indexToMonth,
   indexToMonthShort,

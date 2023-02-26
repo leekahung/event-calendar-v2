@@ -1,4 +1,4 @@
-import { EventDayContext, EventListContext } from "../../../App";
+import { EventDayContext, EventListContext } from "../../../context";
 import { useContext } from "react";
 import { useMediaQuery } from "../../../hooks";
 import Button from "@mui/material/Button";
@@ -16,7 +16,7 @@ const Day = ({ index, year, month, day }: Props) => {
   const query900 = useMediaQuery("(min-width: 900px)");
   const query600 = useMediaQuery("(min-width: 600px)");
 
-  const dateStyle = {
+  const dateStyle: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -39,14 +39,17 @@ const Day = ({ index, year, month, day }: Props) => {
     right: "15%",
   };
 
-  const numEvents = eventList!.filter((e) => {
+  const numEvents = eventList.filter((e) => {
     const eventDate = e.date as Date;
     const eventDay = new Date(eventDate);
-    return eventDay.getDate() === day &&
+    if (
+      eventDay.getDate() === day &&
       eventDay.getMonth() === month &&
       eventDay.getFullYear() === year
-      ? e
-      : null;
+    ) {
+      return e;
+    }
+    return null;
   }).length;
 
   return (

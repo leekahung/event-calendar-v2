@@ -1,5 +1,9 @@
 import React, { useContext } from "react";
-import { EventDayContext, EventListContext, ToggleContext } from "../../../App";
+import {
+  EventDayContext,
+  EventListContext,
+  ToggleContext,
+} from "../../../context";
 import { useField } from "../../../hooks";
 
 interface Props {
@@ -33,7 +37,7 @@ const EventForm = ({ indexToMonth }: Props) => {
       description: eventDescription.value,
       id: generateId(),
     };
-    setEventList(eventList!.concat([newEvent]));
+    setEventList(eventList.concat([newEvent]));
     window.localStorage.setItem("eventList", JSON.stringify(eventList));
     clearEventName();
     clearEventDescription();
