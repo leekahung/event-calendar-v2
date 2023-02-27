@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { Day, DayPlaceholder, Weekday } from "./CalendarGridComponents";
 import ChangeMonthButton from "./ChangeMonthButton";
 import Modal from "../CalendarEvent/Modal";
 import { EventEditForm, EventForm } from "../CalendarEvent/EventForm";
@@ -7,12 +6,13 @@ import { EventDayContext, ToggleContext } from "../../context";
 import {
   indexToMonth,
   indexToMonthShort,
-  indexToWeekday,
-  indexToWeekdayShort,
+  getFirstDayInMonth,
+  getTotalDaysInMonth,
 } from "../../utils/calendar-helper";
 import menu from "../../assets/img/menu.png";
 import IconButton from "@mui/material/IconButton";
 import { useMediaQuery } from "../../hooks";
+import CalenderGrid from "./CalendarGridComponents/CalendarGrid";
 
 interface Props {
   query1200: boolean;
@@ -23,27 +23,12 @@ const Calendar = ({ query1200 }: Props) => {
   const query600 = useMediaQuery("(min-width: 600px)");
   const query400 = useMediaQuery("(min-width: 400px)");
 
-  const weekdayNames = Array(7).fill(0);
-  const initialWeek = Array(42).fill(0);
-
   const calendarStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     position: "relative",
     height: "100%",
-  };
-
-  const calendarGridStyle: React.CSSProperties = {
-    display: "grid",
-    backgroundColor: "black",
-    border: "1px solid black",
-    height: "100%",
-    width: "95%",
-    gridTemplateColumns: "repeat(7, 1fr)",
-    gridTemplateRows: query900 ? "40px repeat(6, 1fr)" : "30px repeat(6, 1fr)",
-    gridGap: "1px",
-    marginBottom: "30px",
   };
 
   const calendarHeaderStyle: React.CSSProperties = {
@@ -82,23 +67,18 @@ const Calendar = ({ query1200 }: Props) => {
   };
 
   const today = new Date();
-  const getFirstDayInMonth = (year: number, monthIndex: number) => {
-    return new Date(year, monthIndex, 1);
-  };
-  const getTotalDaysInMonth = (year: number, monthIndex: number) => {
-    return new Date(year, monthIndex + 1, 0).getDate();
-  };
 
   const [currMonthIndex, setCurrMonthIndex] = useState(today.getMonth());
   const [currYear, setCurrYear] = useState(today.getFullYear());
+  const { toggleState, toggleDispatch } = useContext(ToggleContext);
+  const { eventDayDispatch } = useContext(EventDayContext);
+
   const [firstDayInMonth, setFirstDayInMonth] = useState(
     getFirstDayInMonth(currYear, currMonthIndex)
   );
   const [totalDaysInMonth, setTotalDaysInMonth] = useState(
     getTotalDaysInMonth(currYear, currMonthIndex)
   );
-  const { toggleState, toggleDispatch } = useContext(ToggleContext);
-  const { eventDayDispatch } = useContext(EventDayContext);
 
   const handleChangeMonth = (direction: string) => {
     switch (direction) {
@@ -221,42 +201,12 @@ const Calendar = ({ query1200 }: Props) => {
             </>
           ) : null}
         </div>
-        <div style={calendarGridStyle}>
-          {weekdayNames.map((_weekday, index) => {
-            const weekday = query900
-              ? (indexToWeekday.get(index) as string)
-              : (indexToWeekdayShort.get(index) as string);
-            return <Weekday key={index} index={index} weekday={weekday} />;
-          })}
-          {initialWeek.map((_day, index) => {
-            switch (true) {
-              case index === firstDayInMonth.getDay():
-                return (
-                  <Day
-                    key={index}
-                    index={index}
-                    day={index + 1 - firstDayInMonth.getDay()}
-                    month={currMonthIndex}
-                    year={currYear}
-                  />
-                );
-              case index < firstDayInMonth.getDay():
-                return <DayPlaceholder key={index} index={index} />;
-              case index - firstDayInMonth.getDay() + 1 <= totalDaysInMonth:
-                return (
-                  <Day
-                    key={index}
-                    index={index}
-                    day={index - firstDayInMonth.getDay() + 1}
-                    month={currMonthIndex}
-                    year={currYear}
-                  />
-                );
-              default:
-                return <DayPlaceholder key={index} index={index} />;
-            }
-          })}
-        </div>
+        <CalenderGrid
+          firstDayInMonth={firstDayInMonth}
+          totalDaysInMonth={totalDaysInMonth}
+          currMonthIndex={currMonthIndex}
+          currYear={currYear}
+        />
         <Modal
           openModal={toggleState.openModal}
           onClose={() => {

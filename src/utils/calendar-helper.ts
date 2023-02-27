@@ -47,3 +47,11 @@ export const indexToMonthShort = new Map([
   [10, "Nov"],
   [11, "Dec"],
 ]);
+
+export const getFirstDayInMonth = (year: number, monthIndex: number) => {
+  return new Date(year, monthIndex, 1);
+};
+
+export const getTotalDaysInMonth = (year: number, monthIndex: number) => {
+  return new Date(year, monthIndex + 1, 0).getDate();
+};
