@@ -38,6 +38,8 @@ const Day = ({ index, year, month, day }: Props) => {
           fontSize: query900 ? "16px" : "14px",
           borderRadius: 0,
           color: "rgb(30, 30, 30)",
+          padding: query600 ? "" : "0",
+          minWidth: "45px",
           backgroundColor:
             index % 7 === 0 || index % 7 === 6 ? "rgb(220, 220, 220)" : "white",
           "&:hover": {
@@ -53,12 +55,12 @@ const Day = ({ index, year, month, day }: Props) => {
           eventDayDispatch({ type: "setEventDay", payload: day });
         }}
       >
-        <Container
+        <Box
           sx={{
             height: "100%",
+            width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
             flexDirection: "column",
             position: "relative",
           }}
@@ -107,7 +109,7 @@ const Day = ({ index, year, month, day }: Props) => {
               )
             ) : null}
           </Box>
-        </Container>
+        </Box>
       </Button>
     </>
   );

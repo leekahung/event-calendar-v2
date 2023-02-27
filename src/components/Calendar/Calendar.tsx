@@ -13,6 +13,9 @@ import menu from "../../assets/img/menu.png";
 import IconButton from "@mui/material/IconButton";
 import { useMediaQuery } from "../../hooks";
 import CalenderGrid from "./CalendarGridComponents/CalendarGrid";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 interface Props {
   query1200: boolean;
@@ -21,7 +24,7 @@ interface Props {
 const Calendar = ({ query1200 }: Props) => {
   const query900 = useMediaQuery("(min-width: 900px)");
   const query600 = useMediaQuery("(min-width: 600px)");
-  const query400 = useMediaQuery("(min-width: 400px)");
+  const query450 = useMediaQuery("(min-width: 450px)");
 
   const calendarStyle: React.CSSProperties = {
     display: "flex",
@@ -31,33 +34,13 @@ const Calendar = ({ query1200 }: Props) => {
     height: "100%",
   };
 
-  const calendarHeaderStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "100%",
-    padding: query900 ? "20px" : "10px",
-  };
-
-  const calendarHeaderMainGrpStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: query600 ? "20px" : query400 ? "10px" : "3px",
-  };
-
   const calendarMonthStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
-    width: query900 ? "250px" : query600 ? "180px" : query400 ? "90px" : "80px",
-    fontSize: query900 ? "" : query600 ? "23px" : query400 ? "20px" : "18px",
+    width: query900 ? "250px" : query600 ? "180px" : query450 ? "90px" : "80px",
+    fontSize: query900 ? "" : query600 ? "23px" : query450 ? "20px" : "18px",
+    paddingTop: "3px",
     margin: "0",
-  };
-
-  const calendarButtonStyle: React.CSSProperties = {
-    height: query900 ? "40px" : "30px",
-    width: query900 ? "60px" : "50px",
-    fontSize: "13px",
-    cursor: "pointer",
   };
 
   const burgerMenuStyle: React.CSSProperties = {
@@ -113,8 +96,20 @@ const Calendar = ({ query1200 }: Props) => {
   return (
     <>
       <div style={calendarStyle}>
-        <div style={calendarHeaderStyle}>
-          <div style={calendarHeaderMainGrpStyle}>
+        <Box
+          sx={{
+            display: "flex",
+            padding: "15px 10px",
+          }}
+        >
+          <Container
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: query600 ? "20px" : query450 ? "10px" : "5px",
+              padding: query600 ? "" : "0px",
+            }}
+          >
             <h1 style={calendarMonthStyle}>
               {query600
                 ? indexToMonth.get(currMonthIndex)
@@ -130,8 +125,12 @@ const Calendar = ({ query1200 }: Props) => {
                 />
               );
             })}
-            <button
-              style={calendarButtonStyle}
+            <Button
+              variant="contained"
+              sx={{
+                fontSize: query600 ? "12px" : "11px",
+                padding: query600 ? "" : "6px 10px",
+              }}
               onClick={() => {
                 handleChangeMonth("reset");
                 eventDayDispatch({
@@ -152,17 +151,25 @@ const Calendar = ({ query1200 }: Props) => {
               }}
             >
               Reset {query900 ? "Date" : ""}
-            </button>
-            <button
-              style={calendarButtonStyle}
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                fontSize: query600 ? "12px" : "11px",
+                padding: query600 ? "" : "6px 10px",
+              }}
               onClick={() => {
                 toggleDispatch({ type: "openModal" });
               }}
             >
               Add {query900 ? "Event" : ""}
-            </button>
-            <button
-              style={{ ...calendarButtonStyle, backgroundColor: "" }}
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                fontSize: query600 ? "12px" : "11px",
+                padding: query600 ? "" : "6px 10px",
+              }}
               onClick={() => {
                 const localEventList = window.localStorage.getItem("eventList");
                 if (!localEventList) {
@@ -179,10 +186,10 @@ const Calendar = ({ query1200 }: Props) => {
               }}
             >
               Clear {query900 ? "Events" : ""}
-            </button>
-          </div>
+            </Button>
+          </Container>
           {query1200 ? null : query900 ? (
-            <>
+            <Box>
               <IconButton
                 onClick={() => {
                   if (toggleState.openEventList) {
@@ -198,9 +205,9 @@ const Calendar = ({ query1200 }: Props) => {
                   alt="burger menu icon"
                 />
               </IconButton>
-            </>
+            </Box>
           ) : null}
-        </div>
+        </Box>
         <CalenderGrid
           firstDayInMonth={firstDayInMonth}
           totalDaysInMonth={totalDaysInMonth}
