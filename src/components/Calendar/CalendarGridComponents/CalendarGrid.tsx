@@ -7,7 +7,6 @@ import {
 } from "../../../utils/calendar-helper";
 import Grid from "@mui/material/Grid";
 import { useMediaQuery } from "../../../hooks";
-import { Suspense } from "react";
 
 interface Props {
   firstDayInMonth: Date;
