@@ -96,12 +96,7 @@ const Calendar = ({ query1200 }: Props) => {
   return (
     <>
       <div style={calendarStyle}>
-        <Box
-          sx={{
-            display: "flex",
-            padding: "15px 10px",
-          }}
-        >
+        <Box display="flex" padding="15px 10px">
           <Container
             sx={{
               display: "flex",

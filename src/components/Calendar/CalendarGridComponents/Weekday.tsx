@@ -12,13 +12,13 @@ const Weekday = ({ index, weekday }: Props) => {
 
   return (
     <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      padding={query600 ? "10px" : ""}
+      fontSize={query900 ? "16px" : "14px"}
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         backgroundColor: index % 6 === 0 ? "rgb(220, 220, 220)" : "white",
-        padding: query600 ? "10px" : "",
-        fontSize: query900 ? "16px" : "14px",
       }}
     >
       {weekday}

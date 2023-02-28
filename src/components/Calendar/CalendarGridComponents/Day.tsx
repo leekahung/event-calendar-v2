@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { useMediaQuery } from "../../../hooks";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 
 interface Props {
   index: number;
@@ -56,22 +55,23 @@ const Day = ({ index, year, month, day }: Props) => {
         }}
       >
         <Box
-          sx={{
-            height: "100%",
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            position: "relative",
-          }}
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          position="relative"
+          height="100%"
+          width="100%"
         >
           <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            position="absolute"
+            top="10%"
+            height={query600 ? "30px" : "25px"}
+            width={query600 ? "30px" : "25px"}
+            borderRadius="20px"
             sx={{
-              position: "absolute",
-              top: "10%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               backgroundColor:
                 JSON.stringify({
                   year: eventDayState.eventYear,
@@ -80,31 +80,20 @@ const Day = ({ index, year, month, day }: Props) => {
                 }) === JSON.stringify({ year, month, day })
                   ? "lightblue"
                   : "",
-              height: query600 ? "30px" : "25px",
-              width: query600 ? "30px" : "25px",
-              borderRadius: "20px",
             }}
           >
             {day}
           </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: "10%",
-              right: "15%",
-            }}
-          >
+          <Box position="absolute" bottom="10%" right="15%">
             {numEvents ? (
               query900 ? (
                 numEvents
               ) : (
                 <Box
-                  sx={{
-                    height: "3px",
-                    width: "3px",
-                    borderRadius: "5px",
-                    backgroundColor: "black",
-                  }}
+                  height="3px"
+                  width="3px"
+                  borderRadius="5px"
+                  sx={{ backgroundColor: "black" }}
                 />
               )
             ) : null}

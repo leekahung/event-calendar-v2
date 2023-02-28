@@ -28,17 +28,17 @@ const CalenderGrid = ({
 
   return (
     <Grid
+      display="grid"
+      gridTemplateColumns="repeat(7, 1fr)"
+      gridTemplateRows={
+        query900 ? "40px repeat(6, 1fr)" : "30px repeat(6, 1fr)"
+      }
+      gap="1px"
       sx={{
-        display: "grid",
         backgroundColor: "black",
         border: "1px solid black",
         height: "100%",
         width: "95%",
-        gridTemplateColumns: "repeat(7, 1fr)",
-        gridTemplateRows: query900
-          ? "40px repeat(6, 1fr)"
-          : "30px repeat(6, 1fr)",
-        gridGap: "1px",
         marginBottom: "30px",
       }}
     >
