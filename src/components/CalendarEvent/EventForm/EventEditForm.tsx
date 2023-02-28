@@ -1,3 +1,4 @@
+import DialogContent from "@mui/material/DialogContent";
 import React, { useContext } from "react";
 import {
   EventDayContext,
@@ -80,10 +81,10 @@ const EventEditForm = ({ indexToMonth }: Props) => {
   };
 
   return (
-    <>
+    <DialogContent sx={{ backgroundColor: "rgb(210, 210, 210)" }}>
       <p>Edit Event?</p>
       <form style={style} onSubmit={handleFormSubmit}>
-        <div>Date:</div>
+        <p>Date:</p>
         <div>
           {indexToMonth.get(eventDayState.eventMonth)} {eventDayState.eventDay},{" "}
           {eventDayState.eventYear}
@@ -118,7 +119,7 @@ const EventEditForm = ({ indexToMonth }: Props) => {
           delete
         </button>
       </div>
-    </>
+    </DialogContent>
   );
 };
 

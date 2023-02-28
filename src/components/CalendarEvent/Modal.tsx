@@ -1,4 +1,7 @@
 import closeBtn from "../../assets/img/close.png";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
 
 interface Props {
   openModal: boolean;
@@ -6,37 +9,10 @@ interface Props {
   children: JSX.Element;
 }
 
-export default function Modal({ openModal, onClose, children }: Props) {
+export default function ModalContent({ openModal, onClose, children }: Props) {
   if (!openModal) {
     return null;
   }
-
-  const modalStyle: React.CSSProperties = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    border: "none",
-    borderRadius: "10px",
-    padding: "20px",
-    backgroundColor: "lightgrey",
-    height: "300px",
-    width: "250px",
-    zIndex: 3,
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    position: "absolute",
-    top: "20px",
-    right: "20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "5px",
-    backgroundColor: "lightgrey",
-    border: "none",
-    cursor: "pointer",
-  };
 
   const buttonImgStyle: React.CSSProperties = {
     width: "15px",
@@ -44,11 +20,27 @@ export default function Modal({ openModal, onClose, children }: Props) {
   };
 
   return (
-    <div style={modalStyle}>
-      {children}
-      <button style={buttonStyle} onClick={onClose}>
-        <img style={buttonImgStyle} src={closeBtn} alt="icon of close button" />
-      </button>
-    </div>
+    <Dialog open>
+      <Box>
+        {children}
+        <Button
+          sx={{
+            position: "absolute",
+            minWidth: "15px",
+            top: "25px",
+            right: "20px",
+            backgroundColor: "rgb(210, 210, 210)",
+            borderRadius: "20px",
+          }}
+          onClick={onClose}
+        >
+          <img
+            style={buttonImgStyle}
+            src={closeBtn}
+            alt="icon of close button"
+          />
+        </Button>
+      </Box>
+    </Dialog>
   );
 }

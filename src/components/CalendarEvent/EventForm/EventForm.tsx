@@ -5,6 +5,7 @@ import {
   ToggleContext,
 } from "../../../context";
 import { useField } from "../../../hooks";
+import DialogContent from "@mui/material/DialogContent";
 
 interface Props {
   indexToMonth: Map<number, string>;
@@ -72,7 +73,7 @@ const EventForm = ({ indexToMonth }: Props) => {
   };
 
   return (
-    <>
+    <DialogContent sx={{ backgroundColor: "rgb(210, 210, 210)" }}>
       <p>Add Event?</p>
       <form style={style} onSubmit={handleFormSubmit}>
         <div>Date:</div>
@@ -91,7 +92,7 @@ const EventForm = ({ indexToMonth }: Props) => {
           submit
         </button>
       </form>
-    </>
+    </DialogContent>
   );
 };
 
