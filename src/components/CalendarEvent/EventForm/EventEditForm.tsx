@@ -1,4 +1,3 @@
-import DialogContent from "@mui/material/DialogContent";
 import React, { useContext } from "react";
 import {
   EventDayContext,
@@ -6,6 +5,8 @@ import {
   ToggleContext,
 } from "../../../context";
 import { useField } from "../../../hooks";
+import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
 
 interface Props {
   indexToMonth: Map<number, string>;
@@ -73,13 +74,6 @@ const EventEditForm = ({ indexToMonth }: Props) => {
     gridColumn: "1 / 3",
   };
 
-  const buttonStyle = {
-    padding: "5px 10px",
-    borderRadius: "15px",
-    borderStyle: "none",
-    cursor: "pointer",
-  };
-
   return (
     <DialogContent sx={{ backgroundColor: "rgb(210, 210, 210)" }}>
       <p>Edit Event?</p>
@@ -101,15 +95,27 @@ const EventEditForm = ({ indexToMonth }: Props) => {
           placeholder={eventToEdit.description}
           {...eventDescription}
         />
-        <button style={{ ...buttonStyle, gridColumn: "1 / 3", width: "70px" }}>
+        <Button
+          type="submit"
+          variant="outlined"
+          sx={{
+            fontSize: "11px",
+            padding: "5px 10px",
+            borderRadius: "15px",
+            width: "70px",
+          }}
+        >
           submit
-        </button>
+        </Button>
       </form>
       <div style={{ marginTop: "10px" }}>
-        <button
-          style={{
-            ...buttonStyle,
-            backgroundColor: "rgb(255, 45, 45)",
+        <Button
+          type="submit"
+          variant="outlined"
+          sx={{
+            fontSize: "11px",
+            padding: "5px 10px",
+            borderRadius: "15px",
             width: "70px",
           }}
           onClick={() => {
@@ -117,7 +123,7 @@ const EventEditForm = ({ indexToMonth }: Props) => {
           }}
         >
           delete
-        </button>
+        </Button>
       </div>
     </DialogContent>
   );

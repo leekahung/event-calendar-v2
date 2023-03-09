@@ -6,6 +6,7 @@ import {
 } from "../../../context";
 import { useField } from "../../../hooks";
 import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
 
 interface Props {
   indexToMonth: Map<number, string>;
@@ -65,13 +66,6 @@ const EventForm = ({ indexToMonth }: Props) => {
     gridColumn: "1 / 3",
   };
 
-  const buttonStyle = {
-    padding: "5px 10px",
-    borderRadius: "15px",
-    borderStyle: "none",
-    cursor: "pointer",
-  };
-
   return (
     <DialogContent sx={{ backgroundColor: "rgb(210, 210, 210)" }}>
       <p>Add Event?</p>
@@ -88,9 +82,18 @@ const EventForm = ({ indexToMonth }: Props) => {
           style={{ ...fullWidthStyle, ...textAreaStyle }}
           {...eventDescription}
         />
-        <button style={{ ...buttonStyle, gridColumn: "1 / 3", width: "70px" }}>
+        <Button
+          type="submit"
+          variant="outlined"
+          sx={{
+            fontSize: "11px",
+            padding: "5px 10px",
+            borderRadius: "15px",
+            width: "70px",
+          }}
+        >
           submit
-        </button>
+        </Button>
       </form>
     </DialogContent>
   );
