@@ -6,7 +6,7 @@ import {
 } from "../../context";
 import { indexToMonth } from "../../utils/calendar-helper";
 import { useMediaQuery } from "../../hooks";
-import { Fade, Slide } from "@mui/material";
+import { Slide } from "@mui/material";
 
 const EventList = () => {
   const { eventList } = useContext(EventListContext);
