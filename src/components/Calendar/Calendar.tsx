@@ -37,7 +37,7 @@ const Calendar = ({ query1200 }: Props) => {
   const calendarMonthStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
-    width: query900 ? "250px" : query600 ? "180px" : query450 ? "90px" : "80px",
+    width: query900 ? "250px" : query600 ? "180px" : "90px",
     fontSize: query900 ? "" : query600 ? "23px" : query450 ? "20px" : "18px",
     paddingTop: "3px",
     margin: "0",
@@ -123,8 +123,9 @@ const Calendar = ({ query1200 }: Props) => {
             <Button
               variant="contained"
               sx={{
-                fontSize: query600 ? "12px" : "11px",
-                padding: query600 ? "" : "6px 10px",
+                fontSize: query600 ? "12px" : "10px",
+                padding: query600 ? "" : "6px",
+                minWidth: query600 ? "" : "55px",
               }}
               onClick={() => {
                 handleChangeMonth("reset");
@@ -150,8 +151,9 @@ const Calendar = ({ query1200 }: Props) => {
             <Button
               variant="contained"
               sx={{
-                fontSize: query600 ? "12px" : "11px",
-                padding: query600 ? "" : "6px 10px",
+                fontSize: query600 ? "12px" : "10px",
+                padding: query600 ? "" : "6px",
+                minWidth: query600 ? "" : "55px",
               }}
               onClick={() => {
                 toggleDispatch({ type: "openModal" });
@@ -162,8 +164,9 @@ const Calendar = ({ query1200 }: Props) => {
             <Button
               variant="contained"
               sx={{
-                fontSize: query600 ? "12px" : "11px",
-                padding: query600 ? "" : "6px 10px",
+                fontSize: query600 ? "12px" : "10px",
+                padding: query600 ? "" : "6px",
+                minWidth: query600 ? "" : "55px",
               }}
               onClick={() => {
                 const localEventList = window.localStorage.getItem("eventList");

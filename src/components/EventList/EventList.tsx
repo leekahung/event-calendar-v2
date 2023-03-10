@@ -15,6 +15,9 @@ const EventList = () => {
 
   const query1200 = useMediaQuery("(min-width: 1200px)");
   const query900 = useMediaQuery("(min-width: 900px)");
+  const queryBtwn900And1200 = useMediaQuery(
+    "(min-width: 900px) and (max-width: 1200px)"
+  );
 
   const eventListStyle1200 = !query1200
     ? ({
@@ -63,7 +66,11 @@ const EventList = () => {
   };
 
   return (
-    <Slide direction="right" in={toggleState.openEventList} timeout={500}>
+    <Slide
+      direction="right"
+      in={queryBtwn900And1200 ? toggleState.openEventList : true}
+      timeout={500}
+    >
       <div style={eventListStyle} className="event-list">
         <h2>
           {indexToMonth.get(eventDayState.eventMonth)} {eventDayState.eventDay},{" "}

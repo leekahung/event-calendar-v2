@@ -16,8 +16,8 @@ const ChangeMonthButton = ({ handleChangeMonth, direction }: Props) => {
       aria-label={direction === "left" ? "previous month" : "next month"}
       onClick={() => handleChangeMonth(direction)}
       sx={{
-        height: query900 ? "40px" : "30px",
-        width: query900 ? "40px" : "30px",
+        height: query900 ? "40px" : "25px",
+        width: query900 ? "40px" : "25px",
         backgroundColor: "white",
         borderRadius: "40px",
         "&:hover": {
