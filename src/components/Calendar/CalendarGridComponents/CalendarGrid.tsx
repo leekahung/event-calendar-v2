@@ -47,7 +47,9 @@ const CalenderGrid = ({
           const weekday = query900
             ? (indexToWeekday.get(index) as string)
             : (indexToWeekdayShort.get(index) as string);
-          return <Weekday key={index} index={index} weekday={weekday} />;
+          return (
+            <Weekday key={`weekday${index}`} index={index} weekday={weekday} />
+          );
         })}
       </>
       <>
@@ -56,7 +58,7 @@ const CalenderGrid = ({
             case index === firstDayInMonth.getDay():
               return (
                 <Day
-                  key={index}
+                  key={`gridBox${index}`}
                   index={index}
                   day={index + 1 - firstDayInMonth.getDay()}
                   month={currMonthIndex}
@@ -64,11 +66,11 @@ const CalenderGrid = ({
                 />
               );
             case index < firstDayInMonth.getDay():
-              return <DayPlaceholder key={index} index={index} />;
+              return <DayPlaceholder key={`gridBox${index}`} index={index} />;
             case index - firstDayInMonth.getDay() + 1 <= totalDaysInMonth:
               return (
                 <Day
-                  key={index}
+                  key={`gridBox${index}`}
                   index={index}
                   day={index - firstDayInMonth.getDay() + 1}
                   month={currMonthIndex}
@@ -76,7 +78,7 @@ const CalenderGrid = ({
                 />
               );
             default:
-              return <DayPlaceholder key={index} index={index} />;
+              return <DayPlaceholder key={`gridBox${index}`} index={index} />;
           }
         })}
       </>
