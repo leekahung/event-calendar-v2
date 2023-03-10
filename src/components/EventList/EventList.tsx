@@ -6,6 +6,7 @@ import {
 } from "../../context";
 import { indexToMonth } from "../../utils/calendar-helper";
 import { useMediaQuery } from "../../hooks";
+import { Fade, Slide } from "@mui/material";
 
 const EventList = () => {
   const { eventList } = useContext(EventListContext);
@@ -17,7 +18,6 @@ const EventList = () => {
 
   const eventListStyle1200 = !query1200
     ? ({
-        visibility: toggleState.openEventList ? "" : "hidden",
         position: "absolute",
         height: "100%",
         width: "40%",
@@ -26,7 +26,6 @@ const EventList = () => {
 
   const eventListStyle900 = !query900
     ? ({
-        visibility: "",
         height: "50%",
         width: "100%",
         bottom: "0",
@@ -64,40 +63,45 @@ const EventList = () => {
   };
 
   return (
-    <div style={eventListStyle} className="event-list">
-      <h2>
-        {indexToMonth.get(eventDayState.eventMonth)} {eventDayState.eventDay},{" "}
-        {eventDayState.eventYear}
-      </h2>
-      <div style={eventListCtnrStyle}>
-        {eventList.map((e) => {
-          const eventDate = e.date as Date;
-          const eventId = e.id as number;
-          const dayEvent = new Date(eventDate);
-          if (
-            dayEvent.getFullYear() === eventDayState.eventYear &&
-            dayEvent.getMonth() === eventDayState.eventMonth &&
-            dayEvent.getDate() === eventDayState.eventDay
-          ) {
-            return (
-              <button
-                style={eventBoxStyle}
-                key={e.id}
-                onClick={() => {
-                  eventDayDispatch({ type: "setEventId", payload: eventId });
-                  toggleDispatch({ type: "openModalEdit" });
-                  toggleDispatch({ type: "closeEventList" });
-                }}
-              >
-                {e.name}
-              </button>
-            );
-          } else {
-            return null;
-          }
-        })}
+    <Slide direction="right" in={toggleState.openEventList} timeout={500}>
+      <div style={eventListStyle} className="event-list">
+        <h2>
+          {indexToMonth.get(eventDayState.eventMonth)} {eventDayState.eventDay},{" "}
+          {eventDayState.eventYear}
+        </h2>
+        <div style={eventListCtnrStyle}>
+          {eventList.map((e) => {
+            const eventDate = e.date as Date;
+            const eventId = e.id as number;
+            const dayEvent = new Date(eventDate);
+            if (
+              dayEvent.getFullYear() === eventDayState.eventYear &&
+              dayEvent.getMonth() === eventDayState.eventMonth &&
+              dayEvent.getDate() === eventDayState.eventDay
+            ) {
+              return (
+                <button
+                  style={eventBoxStyle}
+                  key={e.id}
+                  onClick={() => {
+                    eventDayDispatch({
+                      type: "setEventId",
+                      payload: eventId,
+                    });
+                    toggleDispatch({ type: "openModalEdit" });
+                    toggleDispatch({ type: "closeEventList" });
+                  }}
+                >
+                  {e.name}
+                </button>
+              );
+            } else {
+              return null;
+            }
+          })}
+        </div>
       </div>
-    </div>
+    </Slide>
   );
 };
 
