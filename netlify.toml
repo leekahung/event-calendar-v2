@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm build"
+  command = "pnpm run vite:build"
   publish = "build"
 
 [functions]
