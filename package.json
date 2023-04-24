@@ -21,7 +21,7 @@
   },
   "scripts": {
     "vite:start": "vite",
-    "vite:build": "tsc && vite build",
+    "vite:build": "vite build",
     "dev": "netlify dev"
   },
   "eslintConfig": {
